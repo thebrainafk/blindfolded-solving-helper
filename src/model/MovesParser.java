@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MovesParser {
-    private enum Moves {
+    public enum Moves {
         R,
         L,
         U,
@@ -24,7 +24,7 @@ public class MovesParser {
         }
     }
 
-    private enum MoveDirections {
+    public enum MoveDirections {
         CLOCKWISE(null, 1),
         DOUBLE("2", 2),
         COUNTER_CLOCKWISE("'", 3);
@@ -48,7 +48,7 @@ public class MovesParser {
         }
     }
 
-    private enum AllMoves {
+    public enum AllMoves {
         R_CW(Moves.R, MoveDirections.CLOCKWISE), L_CW(Moves.L, MoveDirections.CLOCKWISE), U_CW(Moves.U, MoveDirections.CLOCKWISE),
         D_CW(Moves.D, MoveDirections.CLOCKWISE), F_CW(Moves.F, MoveDirections.CLOCKWISE), B_CW(Moves.B, MoveDirections.CLOCKWISE),
         R_CCW(Moves.R, MoveDirections.COUNTER_CLOCKWISE), L_CCW(Moves.L, MoveDirections.COUNTER_CLOCKWISE), U_CCW(Moves.U, MoveDirections.COUNTER_CLOCKWISE),
