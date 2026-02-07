@@ -23,6 +23,18 @@ CommandService service = new CommandService(registry);
 Result result = service.execute(new CommandRequest("generateScramble", null));
 ```
 
+## Simple web UI
+
+The current entry point starts a tiny HTTP server so you can execute commands in a browser:
+
+1. Run the app: `java -cp out Main`
+2. Open `http://localhost:8080`
+3. Pick a command and execute it to see a message.
+
+## Available commands
+
+- `generateScramble` – runs the current cube manager test routine and returns a status message.
+- `status` – returns a simple status message to verify command execution.
 ## Available commands
 
 - `generateScramble` – runs the current cube manager test routine and returns the resulting cube state (if available).

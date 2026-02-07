@@ -3,6 +3,7 @@ package app;
 import model.CubeManager;
 import view.commands.Command;
 import view.commands.GenerateScramble;
+import view.commands.Status;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class CommandRegistry {
         Objects.requireNonNull(cubeManager);
         this.commands = new HashMap<>();
         register(new GenerateScramble(cubeManager));
+        register(new Status(cubeManager));
     }
 
     public void register(Command command) {
