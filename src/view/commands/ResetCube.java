@@ -1,7 +1,6 @@
 package view.commands;
 
 import model.CubeManager;
-import model.GameArgumentException;
 import view.Result;
 
 public class ResetCube extends Command {
@@ -13,16 +12,11 @@ public class ResetCube extends Command {
     }
 
     @Override
-    public Result execute(String[] arguments) {
+    public Result execute(String arguments) {
 
+        this.cubeManager.resetCube();
 
-        try {
-            this.cubeManager.test();
-        } catch (GameArgumentException error) {
-            return Result.error(error.getMessage());
-        }
-
-        return Result.ok(this.getCubeState());
+        return Result.ok("cube reset", this.getCubeState());
     }
 
 }

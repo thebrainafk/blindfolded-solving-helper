@@ -13,16 +13,16 @@ public class ScrambleCube extends Command {
     }
 
     @Override
-    public Result execute(String[] arguments) {
+    public Result execute(String arguments) {
 
 
         try {
-            this.cubeManager.test();
+            this.cubeManager.scrambleCube();
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok(this.getCubeState());
+        return Result.ok("cube scrambled", this.getCubeState());
     }
 
 }

@@ -18,15 +18,15 @@ public class GenerateScramble extends Command {
     }
 
     @Override
-    public Result execute(String[] arguments) {
+    public Result execute(String arguments) {
 
 
         try {
-            this.cubeManager.test();
+            this.cubeManager.generateScramble();
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok("generateScramble executed.", this.getCubeState());
+        return Result.ok("generateScramble message");
     }
 }

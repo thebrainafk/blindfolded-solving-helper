@@ -37,6 +37,36 @@ public class WebServer {
 
     private void handleIndex(HttpExchange exchange) throws IOException {
         sendHtml(exchange, renderPage(null, "", "", ""));
+        StringBuilder options = new StringBuilder();
+        for (String command : registry.listNames()) {
+            options.append("<option value=\"")
+                .append(command)
+                .append("\">")
+                .append(command)
+                .append("</option>");
+        }
+
+        String body = """
+            <!doctype html>
+            <html lang="de">
+              <head>
+                <meta charset="utf-8" />
+                <title>Blindfolded Solution Generator</title>
+              </head>
+              <body>
+                <h1>Command Tester</h1>
+                <form action="/execute" method="get">
+                  <label for="name">Command</label>
+                  <select id="name" name="name">
+            """ + options + """
+                  </select>
+                  <button type="submit">Execute</button>
+                </form>
+              </body>
+            </html>
+            """;
+
+        sendHtml(exchange, body);
     }
 
     private void handleExecute(HttpExchange exchange) throws IOException {

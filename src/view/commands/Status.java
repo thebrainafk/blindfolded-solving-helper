@@ -14,7 +14,7 @@ public class Status extends Command {
     }
 
     @Override
-    public Result execute(String[] arguments) {
+    public Result execute(String arguments) {
         return Result.ok("status executed.");
     }
 }

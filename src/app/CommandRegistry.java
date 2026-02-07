@@ -2,8 +2,14 @@ package app;
 
 import model.CubeManager;
 import view.commands.Command;
+import view.commands.GenerateCornersPochmann;
+import view.commands.GenerateEdgesM2;
+import view.commands.GenerateEdgesPochmann;
 import view.commands.GenerateScramble;
+import view.commands.ResetCube;
+import view.commands.ScrambleCube;
 import view.commands.Status;
+import view.commands.ToggleMemoryHelper;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,8 +26,14 @@ public class CommandRegistry {
     public CommandRegistry(CubeManager cubeManager) {
         Objects.requireNonNull(cubeManager);
         this.commands = new HashMap<>();
+        register(new GenerateCornersPochmann(cubeManager));
+        register(new GenerateEdgesM2(cubeManager));
+        register(new GenerateEdgesPochmann(cubeManager));
         register(new GenerateScramble(cubeManager));
+        register(new ResetCube(cubeManager));
+        register(new ScrambleCube(cubeManager));
         register(new Status(cubeManager));
+        register(new ToggleMemoryHelper(cubeManager));
     }
 
     public void register(Command command) {
