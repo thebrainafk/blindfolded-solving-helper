@@ -7,10 +7,9 @@ package model;
  * @author uckhu
  */
 public class CubeManager {
-    private final Cube cube;
+    private Cube cube;
 
     public CubeManager() {
-        this.cube = new Cube();
     }
 
     public String test() throws GameArgumentException {
@@ -18,6 +17,9 @@ public class CubeManager {
     }
 
     public Cube getCube() {
+        if (cube == null) {
+            cube = new Cube();
+        }
         return cube;
     }
 }

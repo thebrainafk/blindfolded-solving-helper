@@ -27,6 +27,6 @@ public class GenerateScramble extends Command {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok(this.getCubeState());
+        return Result.ok("generateScramble executed.");
     }
 }
