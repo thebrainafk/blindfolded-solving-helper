@@ -2,6 +2,8 @@ package view;
 
 import model.CubeState;
 
+import java.util.Objects;
+
 public final class Result {
 
     private final boolean success;
@@ -10,12 +12,20 @@ public final class Result {
 
     private Result(boolean success, String message, CubeState cubeState) {
         this.success = success;
-        this.message = message;
+        this.message = Objects.requireNonNull(message);
         this.cubeState = cubeState;
     }
 
+    public static Result ok(String message) {
+        return new Result(true, message, null);
+    }
+
+    public static Result ok(String message, CubeState cubeState) {
+        return new Result(true, message, cubeState);
+    }
+
     public static Result ok(CubeState cubeState) {
-        return new Result(true, null, cubeState);
+        return new Result(true, "", cubeState);
     }
 
     public static Result error(String message) {
@@ -34,4 +44,3 @@ public final class Result {
         return cubeState;
     }
 }
-
