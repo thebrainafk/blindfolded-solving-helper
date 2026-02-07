@@ -35,6 +35,9 @@ The current entry point starts a tiny HTTP server so you can execute commands in
 
 - `generateScramble` – runs the current cube manager test routine and returns a status message.
 - `status` – returns a simple status message to verify command execution.
+## Available commands
+
+- `generateScramble` – runs the current cube manager test routine and returns the resulting cube state (if available).
 
 ## Project structure
 
