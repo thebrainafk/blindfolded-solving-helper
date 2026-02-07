@@ -27,6 +27,9 @@ public enum CornerPiece {
         this.firstTile = firstTiletile;
         this.secondTile = secondTile;
         this.thirdTile = thirdTile;
+    }
+
+    static {
         fillMaps();
     }
 

@@ -10,7 +10,6 @@ public class CubeManager {
     private Cube cube;
 
     public CubeManager() {
-
     }
 
     public void resetCube() {
