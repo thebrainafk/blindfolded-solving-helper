@@ -1,28 +1,22 @@
 package view.commands;
 
 import model.CubeManager;
-import model.GameArgumentException;
 import view.Result;
 
 public class ToggleMemoryHelper extends Command {
 
-    private static final String COMMAND_NAME = "scrambleCube";
+    private static final String COMMAND_NAME = "toggleMemoryHelper";
 
     public ToggleMemoryHelper(CubeManager cubeManager) {
         super(cubeManager, COMMAND_NAME);
     }
 
     @Override
-    public Result execute(String[] arguments) {
+    public Result execute(String arguments) {
 
+        this.cubeManager.toggleMemoryHelper();
 
-        try {
-            this.cubeManager.test();
-        } catch (GameArgumentException error) {
-            return Result.error(error.getMessage());
-        }
-
-        return Result.ok(this.getCubeState());
+        return Result.ok("memory helper toggled");
     }
 
 }

@@ -13,16 +13,16 @@ public class GenerateEdgesM2 extends Command {
     }
 
     @Override
-    public Result execute(String[] arguments) {
+    public Result execute(String arguments) {
 
 
         try {
-            this.cubeManager.test();
+            this.cubeManager.generateEdgesM2();
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok(this.getCubeState());
+        return Result.ok("generateEdgesM2 message");
     }
 
 }

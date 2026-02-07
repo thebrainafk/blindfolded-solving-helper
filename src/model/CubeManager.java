@@ -10,16 +10,32 @@ public class CubeManager {
     private Cube cube;
 
     public CubeManager() {
+
     }
 
-    public String test() throws GameArgumentException {
-        return "test";
+    public void resetCube() {
+        this.cube = new Cube();
     }
 
     public Cube getCube() {
-        if (cube == null) {
-            cube = new Cube();
-        }
-        return cube;
+        return this.cube;
+    }
+
+    public void generateCornersPochmann() throws GameArgumentException {
+    }
+
+    public void generateEdgesM2() throws GameArgumentException {
+    }
+
+    public void generateEdgesPochmann() throws GameArgumentException {
+    }
+
+    public void generateScramble() throws GameArgumentException {
+    }
+
+    public void scrambleCube() throws GameArgumentException {
+    }
+
+    public void toggleMemoryHelper() {
     }
 }

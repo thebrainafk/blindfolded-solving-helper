@@ -37,8 +37,8 @@ public abstract class Command {
     /**
      * asdf.
      *
-     * @param arguments
+     * @param arguments asdf
      * @return asdf
      */
-    public abstract Result execute(String[] arguments);
+    public abstract Result execute(String arguments);
 }

@@ -25,6 +25,6 @@ public class CommandService {
             return Result.error("Unknown command");
         }
 
-        return command.execute(request.arguments());
+        return command.execute(request.argument());
     }
 }
