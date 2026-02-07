@@ -1,4 +1,7 @@
-import view.UI;
+import app.CommandRegistry;
+import app.CommandService;
+import app.WebServer;
+import model.CubeManager;
 
 /**
  * asdf.
@@ -16,7 +19,16 @@ public final class Main {
      * @param args
      */
     public static void main(String[] args) {
-        UI ui = new UI();
-        ui.start();
+        CubeManager cubeManager = new CubeManager();
+        CommandRegistry registry = new CommandRegistry(cubeManager);
+        CommandService service = new CommandService(registry);
+
+        WebServer webServer = new WebServer(service, registry);
+        try {
+            webServer.start(8080);
+            System.out.println("Web server running at http://localhost:8080");
+        } catch (Exception error) {
+            System.out.printf("ERROR: %s%n", error.getMessage());
+        }
     }
 }

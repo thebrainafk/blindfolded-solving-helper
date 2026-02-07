@@ -64,6 +64,9 @@ public enum Tile {
 
     Tile(String color) {
         this.color = color;
+    }
+
+    static {
         fillMaps();
     }
 

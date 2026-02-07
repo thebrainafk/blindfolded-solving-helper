@@ -29,6 +29,9 @@ public enum EdgePiece {
     EdgePiece(Tile firstTile, Tile secondTile) {
         this.firstTile = firstTile;
         this.secondTile = secondTile;
+    }
+
+    static {
         fillMaps();
     }
 
