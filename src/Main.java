@@ -1,4 +1,8 @@
-import view.UI;
+import app.CommandRegistry;
+import app.CommandRequest;
+import app.CommandService;
+import model.CubeManager;
+import view.Result;
 
 /**
  * asdf.
@@ -16,7 +20,15 @@ public final class Main {
      * @param args
      */
     public static void main(String[] args) {
-        UI ui = new UI();
-        ui.start();
+        CubeManager cubeManager = new CubeManager();
+        CommandRegistry registry = new CommandRegistry(cubeManager);
+        CommandService service = new CommandService(registry);
+
+        Result result = service.execute(new CommandRequest("generateScramble", null));
+        if (result.success()) {
+            System.out.println("Command executed successfully.");
+        } else {
+            System.out.printf("ERROR: %s%n", result.message());
+        }
     }
 }
