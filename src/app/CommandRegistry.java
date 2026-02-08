@@ -8,7 +8,6 @@ import view.commands.GenerateEdgesPochmann;
 import view.commands.GenerateScramble;
 import view.commands.ResetCube;
 import view.commands.ScrambleCube;
-import view.commands.Status;
 import view.commands.ToggleMemoryHelper;
 
 import java.util.Collections;
@@ -32,7 +31,6 @@ public class CommandRegistry {
         register(new GenerateScramble(cubeManager));
         register(new ResetCube(cubeManager));
         register(new ScrambleCube(cubeManager));
-        register(new Status(cubeManager));
         register(new ToggleMemoryHelper(cubeManager));
     }
 

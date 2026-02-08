@@ -16,7 +16,7 @@ public class ToggleMemoryHelper extends Command {
 
         this.cubeManager.toggleMemoryHelper();
 
-        return Result.ok("memory helper toggled");
+        return Result.ok("memory helper toggled", this.cubeState);
     }
 
 }

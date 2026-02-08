@@ -22,7 +22,7 @@ public class GenerateCornersPochmann extends Command {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok("generateCornersPochmann message");
+        return Result.ok("generateCornersPochmann message", this.cubeState);
     }
 
 }

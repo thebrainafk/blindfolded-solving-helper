@@ -1,6 +1,7 @@
 package view.commands;
 
 import model.CubeManager;
+import model.CubeState;
 import view.Result;
 
 public class ResetCube extends Command {
@@ -16,7 +17,7 @@ public class ResetCube extends Command {
 
         this.cubeManager.resetCube();
 
-        return Result.ok("cube reset", this.getCubeState());
+        return Result.ok("cube reset", new CubeState(cubeManager.getCube()));
     }
 
 }

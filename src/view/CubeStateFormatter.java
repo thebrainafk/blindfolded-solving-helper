@@ -30,11 +30,11 @@ public class CubeStateFormatter {
         for (CornerPiece piece : sortedKeys(corners)) {
             Corner corner = corners.get(piece);
             builder.append(piece.name())
-                .append(": (")
-                .append(corner.getLocation().name())
-                .append(") ")
-                .append(formatCornerTiles(piece, corner))
-                .append(System.lineSeparator());
+                    .append(": (")
+                    .append(corner.getCurrentLocation().name())
+                    .append(") ")
+                    .append(formatCornerTiles(piece, corner))
+                    .append(System.lineSeparator());
         }
     }
 
@@ -43,27 +43,27 @@ public class CubeStateFormatter {
         for (EdgePiece piece : sortedKeys(edges)) {
             Edge edge = edges.get(piece);
             builder.append(piece.name())
-                .append(": (")
-                .append(edge.getLocation().name())
-                .append(") ")
-                .append(formatEdgeTiles(piece, edge))
-                .append(System.lineSeparator());
+                    .append(": (")
+                    .append(edge.getCurrentLocation().name())
+                    .append(") ")
+                    .append(formatEdgeTiles(piece, edge))
+                    .append(System.lineSeparator());
         }
     }
 
     private String formatCornerTiles(CornerPiece piece, Corner corner) {
         return formatTileMapping(piece.getFirstTile(), corner)
-            + ", " + formatTileMapping(piece.getSecondTile(), corner)
-            + ", " + formatTileMapping(piece.getThirdTile(), corner);
+                + ", " + formatTileMapping(piece.getSecondTile(), corner)
+                + ", " + formatTileMapping(piece.getThirdTile(), corner);
     }
 
     private String formatEdgeTiles(EdgePiece piece, Edge edge) {
         return formatTileMapping(piece.getFirstTile(), edge)
-            + ", " + formatTileMapping(piece.getSecondTile(), edge);
+                + ", " + formatTileMapping(piece.getSecondTile(), edge);
     }
 
     private String formatTileMapping(Tile tile, Piece piece) {
-        Tile location = piece.getTileLocation(tile);
+        Tile location = piece.getCurrentTileLocation(tile);
         return tile.name() + ": " + (location == null ? "?" : location.name());
     }
 

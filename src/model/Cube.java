@@ -40,12 +40,8 @@ public class Cube {
         this.corners.put(corner.getCorner(), corner);
     }
 
-    private void turnLeft(boolean clockwise) {
-        int repetitions = 1;
-        if (!clockwise) {
-            repetitions = 3;
-        }
-        for (int i = 0; i < repetitions; i++) {
+    public void turnLeft(int turns) {
+        for (int i = 0; i < turns; i++) {
             Corner firstCorner = corners.get(CornerPiece.CORNER_A);
             Corner secondCorner = corners.get(firstCorner.getCorner().getLeft());
             Corner thirdCorner = corners.get(secondCorner.getCorner().getLeft());
@@ -66,12 +62,8 @@ public class Cube {
         }
     }
 
-    private void turnRight(boolean clockwise) {
-        int repetitions = 1;
-        if (!clockwise) {
-            repetitions = 3;
-        }
-        for (int i = 0; i < repetitions; i++) {
+    public void turnRight(int turns) {
+        for (int i = 0; i < turns; i++) {
             Corner firstCorner = corners.get(CornerPiece.CORNER_C);
             Corner secondCorner = corners.get(firstCorner.getCorner().getRight());
             Corner thirdCorner = corners.get(secondCorner.getCorner().getRight());
@@ -82,9 +74,13 @@ public class Cube {
             firstCorner.turnRight(fourthCorner);
 
             Edge firstEdge = edges.get(EdgePiece.EDGE_B);
+            System.out.println(firstEdge.getEdge());
             Edge secondEdge = edges.get(firstEdge.getEdge().getRight());
+            System.out.println(secondEdge.getEdge());
             Edge thirdEdge = edges.get(secondEdge.getEdge().getRight());
+            System.out.println(thirdEdge.getEdge());
             Edge fourthEdge = edges.get(thirdEdge.getEdge().getRight());
+            System.out.println(fourthEdge.getEdge());
             secondEdge.turnRight(firstEdge);
             thirdEdge.turnRight(secondEdge);
             fourthEdge.turnRight(thirdEdge);
@@ -92,12 +88,8 @@ public class Cube {
         }
     }
 
-    private void turnUp(boolean clockwise) {
-        int repetitions = 1;
-        if (!clockwise) {
-            repetitions = 3;
-        }
-        for (int i = 0; i < repetitions; i++) {
+    public void turnUp(int turns) {
+        for (int i = 0; i < turns; i++) {
             Corner firstCorner = corners.get(CornerPiece.CORNER_C);
             Corner secondCorner = corners.get(firstCorner.getCorner().getUp());
             Corner thirdCorner = corners.get(secondCorner.getCorner().getUp());
@@ -118,12 +110,8 @@ public class Cube {
         }
     }
 
-    private void turnDown(boolean clockwise) {
-        int repetitions = 1;
-        if (!clockwise) {
-            repetitions = 3;
-        }
-        for (int i = 0; i < repetitions; i++) {
+    public void turnDown(int turns) {
+        for (int i = 0; i < turns; i++) {
             Corner firstCorner = corners.get(CornerPiece.CORNER_U);
             Corner secondCorner = corners.get(firstCorner.getCorner().getDown());
             Corner thirdCorner = corners.get(secondCorner.getCorner().getDown());
@@ -144,12 +132,8 @@ public class Cube {
         }
     }
 
-    private void turnFront(boolean clockwise) {
-        int repetitions = 1;
-        if (!clockwise) {
-            repetitions = 3;
-        }
-        for (int i = 0; i < repetitions; i++) {
+    public void turnFront(int turns) {
+        for (int i = 0; i < turns; i++) {
             Corner firstCorner = corners.get(CornerPiece.CORNER_D);
             Corner secondCorner = corners.get(firstCorner.getCorner().getFront());
             Corner thirdCorner = corners.get(secondCorner.getCorner().getFront());
@@ -170,12 +154,8 @@ public class Cube {
         }
     }
 
-    private void turnBack(boolean clockwise) {
-        int repetitions = 1;
-        if (!clockwise) {
-            repetitions = 3;
-        }
-        for (int i = 0; i < repetitions; i++) {
+    public void turnBack(int turns) {
+        for (int i = 0; i < turns; i++) {
             Corner firstCorner = corners.get(CornerPiece.CORNER_B);
             Corner secondCorner = corners.get(firstCorner.getCorner().getBack());
             Corner thirdCorner = corners.get(secondCorner.getCorner().getBack());

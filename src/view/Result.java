@@ -16,10 +16,6 @@ public final class Result {
         this.cubeState = cubeState;
     }
 
-    public static Result ok(String message) {
-        return new Result(true, message, null);
-    }
-
     public static Result ok(String message, CubeState cubeState) {
         return new Result(true, message, cubeState);
     }

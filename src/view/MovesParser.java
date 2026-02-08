@@ -1,4 +1,4 @@
-package model;
+package view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class MovesParser {
     }
 
     public enum MoveDirections {
-        CLOCKWISE(null, 1),
+        CLOCKWISE("", 1),
         DOUBLE("2", 2),
         COUNTER_CLOCKWISE("'", 3);
 

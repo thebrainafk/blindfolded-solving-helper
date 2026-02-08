@@ -4,18 +4,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Piece {
-    protected final Map<Tile, Tile> tileLocation;
+    protected final Map<Tile, Tile> currentTileLocation;
+    protected final Map<Tile, Tile> previousTileLocation;
+
 
     protected Piece() {
-        this.tileLocation = new HashMap<>();
+        this.currentTileLocation = new HashMap<>();
+        this.previousTileLocation = new HashMap<>();
     }
 
-    public Tile getTileLocation(Tile tile) {
-        return this.tileLocation.get(tile);
+    public Tile getCurrentTileLocation(Tile tile) {
+        return this.currentTileLocation.get(tile);
+    }
+
+    public Tile getPreviousTileLocation(Tile tile) {
+        return this.previousTileLocation.get(tile);
     }
 
     public void setTileLocation(Tile tile, Tile location) {
-        this.tileLocation.put(tile, location);
+        this.previousTileLocation.put(tile, this.currentTileLocation.get(tile));
+        this.currentTileLocation.put(tile, location);
     }
 
 

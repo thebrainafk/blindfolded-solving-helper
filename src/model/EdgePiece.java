@@ -50,18 +50,10 @@ public enum EdgePiece {
         turnLeft.put(EDGE_W, EDGE_C);
         turnLeft.put(EDGE_X, EDGE_D);
 
-        turnRight.put(EDGE_A, EDGE_D);
-        turnRight.put(EDGE_B, EDGE_C);
-        turnRight.put(EDGE_C, EDGE_B);
-        turnRight.put(EDGE_D, EDGE_A);
-        turnRight.put(EDGE_F, EDGE_D);
-        turnRight.put(EDGE_H, EDGE_C);
-        turnRight.put(EDGE_N, EDGE_B);
-        turnRight.put(EDGE_P, EDGE_A);
-        turnRight.put(EDGE_U, EDGE_D);
-        turnRight.put(EDGE_V, EDGE_C);
-        turnRight.put(EDGE_W, EDGE_B);
-        turnRight.put(EDGE_X, EDGE_A);
+        turnRight.put(EDGE_B, EDGE_N);
+        turnRight.put(EDGE_N, EDGE_V);
+        turnRight.put(EDGE_V, EDGE_P);
+        turnRight.put(EDGE_P, EDGE_B);
 
         turnUp.put(EDGE_A, EDGE_F);
         turnUp.put(EDGE_B, EDGE_H);

@@ -15,10 +15,12 @@ import java.util.Objects;
 public abstract class Command {
     protected final String commandName;
     protected final CubeManager cubeManager;
+    protected CubeState cubeState;
 
     protected Command(CubeManager cubeManager, String commandName) {
         this.cubeManager = Objects.requireNonNull(cubeManager);
         this.commandName = Objects.requireNonNull(commandName);
+        this.cubeState = new CubeState(cubeManager.getCube());
     }
 
     /**
@@ -30,9 +32,13 @@ public abstract class Command {
         return commandName;
     }
 
-    public CubeState getCubeState() {
-        return new CubeState(cubeManager.getCube());
-    }
+//    public void updateCubeState() {
+//        this.cubeState = new CubeState(cubeManager.getCube());
+//    }
+
+//    public CubeState getCubeState() {
+//        return new CubeState(cubeManager.getCube());
+//    }
 
     /**
      * asdf.

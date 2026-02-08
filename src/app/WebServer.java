@@ -40,31 +40,31 @@ public class WebServer {
         StringBuilder options = new StringBuilder();
         for (String command : registry.listNames()) {
             options.append("<option value=\"")
-                .append(command)
-                .append("\">")
-                .append(command)
-                .append("</option>");
+                    .append(command)
+                    .append("\">")
+                    .append(command)
+                    .append("</option>");
         }
 
         String body = """
-            <!doctype html>
-            <html lang="de">
-              <head>
-                <meta charset="utf-8" />
-                <title>Blindfolded Solution Generator</title>
-              </head>
-              <body>
-                <h1>Command Tester</h1>
-                <form action="/execute" method="get">
-                  <label for="name">Command</label>
-                  <select id="name" name="name">
-            """ + options + """
-                  </select>
-                  <button type="submit">Execute</button>
-                </form>
-              </body>
-            </html>
-            """;
+                <!doctype html>
+                <html lang="de">
+                  <head>
+                    <meta charset="utf-8" />
+                    <title>Blindfolded Solution Generator</title>
+                  </head>
+                  <body>
+                    <h1>Command Tester</h1>
+                    <form action="/execute" method="get">
+                      <label for="name">Command</label>
+                      <select id="name" name="name">
+                """ + options + """
+                      </select>
+                      <button type="submit">Execute</button>
+                    </form>
+                  </body>
+                </html>
+                """;
 
         sendHtml(exchange, body);
     }
@@ -73,12 +73,11 @@ public class WebServer {
         Map<String, String> params = parseQuery(exchange.getRequestURI().getRawQuery());
         String name = params.get("name");
         String arguments = params.getOrDefault("args", "");
-        String[] parsedArguments = parseArguments(arguments);
-        Result result = commandService.execute(new CommandRequest(name, parsedArguments));
+        Result result = commandService.execute(new CommandRequest(name, arguments));
 
         String message = result.success()
-            ? "OK: " + result.message()
-            : "ERROR: " + result.message();
+                ? result.message()
+                : "ERROR: " + result.message();
 
         String cubeStateText = formatCubeState(result.cubeState());
 
@@ -106,45 +105,45 @@ public class WebServer {
     private String renderPage(String selectedCommand, String arguments, String message, String cubeStateText) {
         String options = buildCommandOptions(selectedCommand);
         return """
-            <!doctype html>
-            <html lang="de">
-              <head>
-                <meta charset="utf-8" />
-                <title>Blindfolded Solution Generator</title>
-                <style>
-                  body { font-family: Arial, sans-serif; margin: 2rem; }
-                  label { display: block; margin-top: 1rem; font-weight: bold; }
-                  textarea { width: 100%%; min-height: 6rem; }
-                  select, input, button { margin-top: 0.5rem; }
-                  .outputs { margin-top: 2rem; }
-                </style>
-              </head>
-              <body>
-                <h1>Command Tester</h1>
-                <form action="/execute" method="get">
-                  <label for="name">Command</label>
-                  <select id="name" name="name">
-            %s
-                  </select>
-                  <label for="args">Arguments</label>
-                  <input id="args" name="args" type="text" value="%s" />
-                  <div>
-                    <button type="submit">Execute</button>
-                  </div>
-                </form>
-                <div class="outputs">
-                  <label for="message">Output</label>
-                  <textarea id="message" readonly>%s</textarea>
-                  <label for="cubeState">Cube State</label>
-                  <textarea id="cubeState" readonly>%s</textarea>
-                </div>
-              </body>
-            </html>
-            """.formatted(
-            options,
-            escapeHtml(arguments),
-            escapeHtml(message),
-            escapeHtml(cubeStateText)
+                <!doctype html>
+                <html lang="de">
+                  <head>
+                    <meta charset="utf-8" />
+                    <title>Blindfolded Solution Generator</title>
+                    <style>
+                      body { font-family: Arial, sans-serif; margin: 2rem; }
+                      label { display: block; margin-top: 1rem; font-weight: bold; }
+                      textarea { width: 100%%; min-height: 22rem; }
+                      select, input, button { margin-top: 0.5rem; }
+                      .outputs { margin-top: 2rem; }
+                    </style>
+                  </head>
+                  <body>
+                    <h1>Command Tester</h1>
+                    <form action="/execute" method="get">
+                      <label for="name">Command</label>
+                      <select id="name" name="name">
+                %s
+                      </select>
+                      <label for="args">Arguments</label>
+                      <input id="args" name="args" type="text" value="%s" />
+                      <div>
+                        <button type="submit">Execute</button>
+                      </div>
+                    </form>
+                    <div class="outputs">
+                      <label for="message">Output</label>
+                      <textarea id="message" readonly>%s</textarea>
+                      <label for="cubeState">Cube State</label>
+                      <textarea id="cubeState" readonly>%s</textarea>
+                    </div>
+                  </body>
+                </html>
+                """.formatted(
+                options,
+                escapeHtml(arguments),
+                escapeHtml(message),
+                escapeHtml(cubeStateText)
         );
     }
 
@@ -152,23 +151,16 @@ public class WebServer {
         StringBuilder options = new StringBuilder();
         for (String command : registry.listNames()) {
             options.append("<option value=\"")
-                .append(command)
-                .append("\"");
+                    .append(command)
+                    .append("\"");
             if (command.equals(selectedCommand)) {
                 options.append(" selected");
             }
             options.append(">")
-                .append(command)
-                .append("</option>");
+                    .append(command)
+                    .append("</option>");
         }
         return options.toString();
-    }
-
-    private static String[] parseArguments(String arguments) {
-        if (arguments == null || arguments.isBlank()) {
-            return null;
-        }
-        return arguments.trim().split("\\s+");
     }
 
     private String formatCubeState(CubeState cubeState) {
@@ -183,9 +175,9 @@ public class WebServer {
             return "";
         }
         return value
-            .replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;");
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;");
     }
 
     private static void sendHtml(HttpExchange exchange, String body) throws IOException {

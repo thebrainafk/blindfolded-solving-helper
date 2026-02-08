@@ -2,22 +2,31 @@ package model;
 
 public class Corner extends Piece {
     private final CornerPiece corner;
-    private CornerPiece location;
+    private CornerPiece currentLocation;
+    private CornerPiece previousLocation;
 
     public Corner(CornerPiece corner) {
         this.corner = corner;
-        this.location = corner;
+        this.currentLocation = corner;
+        this.previousLocation = corner;
         this.initialize();
     }
 
     private void initialize() {
-        this.tileLocation.put(corner.getFirstTile(), corner.getFirstTile());
-        this.tileLocation.put(corner.getSecondTile(), corner.getSecondTile());
-        this.tileLocation.put(corner.getThirdTile(), corner.getThirdTile());
+        this.currentTileLocation.put(corner.getFirstTile(), corner.getFirstTile());
+        this.currentTileLocation.put(corner.getSecondTile(), corner.getSecondTile());
+        this.currentTileLocation.put(corner.getThirdTile(), corner.getThirdTile());
+        this.previousTileLocation.put(corner.getFirstTile(), corner.getFirstTile());
+        this.previousTileLocation.put(corner.getSecondTile(), corner.getSecondTile());
+        this.previousTileLocation.put(corner.getThirdTile(), corner.getThirdTile());
     }
 
-    public CornerPiece getLocation() {
-        return location;
+    public CornerPiece getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public CornerPiece getPreviousLocation() {
+        return previousLocation;
     }
 
     public CornerPiece getCorner() {
@@ -25,7 +34,8 @@ public class Corner extends Piece {
     }
 
     private void swap(Corner corner) {
-        this.location = corner.getLocation();
+        this.previousLocation = this.currentLocation;
+        this.currentLocation = corner.getPreviousLocation();
     }
 
     public void turnLeft(Piece piece) {
@@ -33,9 +43,9 @@ public class Corner extends Piece {
         Tile nextFirstTile = this.corner.getFirstTile().getLeft();
         Tile nextSecondTile = this.corner.getSecondTile().getLeft();
         Tile nextThirdTile = this.corner.getThirdTile().getLeft();
-        this.tileLocation.put(this.corner.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.corner.getSecondTile(), piece.getTileLocation(nextSecondTile));
-        this.tileLocation.put(this.corner.getThirdTile(), piece.getTileLocation(nextThirdTile));
+        this.currentTileLocation.put(this.corner.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.corner.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.corner.getThirdTile(), piece.getCurrentTileLocation(nextThirdTile));
     }
 
     public void turnRight(Piece piece) {
@@ -43,9 +53,9 @@ public class Corner extends Piece {
         Tile nextFirstTile = this.corner.getFirstTile().getRight();
         Tile nextSecondTile = this.corner.getSecondTile().getRight();
         Tile nextThirdTile = this.corner.getThirdTile().getRight();
-        this.tileLocation.put(this.corner.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.corner.getSecondTile(), piece.getTileLocation(nextSecondTile));
-        this.tileLocation.put(this.corner.getThirdTile(), piece.getTileLocation(nextThirdTile));
+        this.setTileLocation(this.corner.getFirstTile(), piece.getPreviousTileLocation(nextFirstTile));
+        this.setTileLocation(this.corner.getSecondTile(), piece.getPreviousTileLocation(nextSecondTile));
+        this.setTileLocation(this.corner.getThirdTile(), piece.getPreviousTileLocation(nextThirdTile));
     }
 
     public void turnUp(Piece piece) {
@@ -53,9 +63,9 @@ public class Corner extends Piece {
         Tile nextFirstTile = this.corner.getFirstTile().getUp();
         Tile nextSecondTile = this.corner.getSecondTile().getUp();
         Tile nextThirdTile = this.corner.getThirdTile().getUp();
-        this.tileLocation.put(this.corner.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.corner.getSecondTile(), piece.getTileLocation(nextSecondTile));
-        this.tileLocation.put(this.corner.getThirdTile(), piece.getTileLocation(nextThirdTile));
+        this.currentTileLocation.put(this.corner.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.corner.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.corner.getThirdTile(), piece.getCurrentTileLocation(nextThirdTile));
     }
 
     public void turnDown(Piece piece) {
@@ -63,9 +73,9 @@ public class Corner extends Piece {
         Tile nextFirstTile = this.corner.getFirstTile().getDown();
         Tile nextSecondTile = this.corner.getSecondTile().getDown();
         Tile nextThirdTile = this.corner.getThirdTile().getDown();
-        this.tileLocation.put(this.corner.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.corner.getSecondTile(), piece.getTileLocation(nextSecondTile));
-        this.tileLocation.put(this.corner.getThirdTile(), piece.getTileLocation(nextThirdTile));
+        this.currentTileLocation.put(this.corner.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.corner.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.corner.getThirdTile(), piece.getCurrentTileLocation(nextThirdTile));
     }
 
     public void turnFront(Piece piece) {
@@ -73,9 +83,9 @@ public class Corner extends Piece {
         Tile nextFirstTile = this.corner.getFirstTile().getFront();
         Tile nextSecondTile = this.corner.getSecondTile().getFront();
         Tile nextThirdTile = this.corner.getThirdTile().getFront();
-        this.tileLocation.put(this.corner.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.corner.getSecondTile(), piece.getTileLocation(nextSecondTile));
-        this.tileLocation.put(this.corner.getThirdTile(), piece.getTileLocation(nextThirdTile));
+        this.currentTileLocation.put(this.corner.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.corner.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.corner.getThirdTile(), piece.getCurrentTileLocation(nextThirdTile));
     }
 
     public void turnBack(Piece piece) {
@@ -83,8 +93,10 @@ public class Corner extends Piece {
         Tile nextFirstTile = this.corner.getFirstTile().getBack();
         Tile nextSecondTile = this.corner.getSecondTile().getBack();
         Tile nextThirdTile = this.corner.getThirdTile().getBack();
-        this.tileLocation.put(this.corner.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.corner.getSecondTile(), piece.getTileLocation(nextSecondTile));
-        this.tileLocation.put(this.corner.getThirdTile(), piece.getTileLocation(nextThirdTile));
+        this.currentTileLocation.put(this.corner.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.corner.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.corner.getThirdTile(), piece.getCurrentTileLocation(nextThirdTile));
     }
+
+
 }

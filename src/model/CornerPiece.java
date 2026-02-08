@@ -44,14 +44,10 @@ public enum CornerPiece {
         turnLeft.put(CORNER_W, CORNER_X);
         turnLeft.put(CORNER_X, CORNER_U);
 
-        turnRight.put(CORNER_A, CORNER_D);
-        turnRight.put(CORNER_B, CORNER_C);
         turnRight.put(CORNER_C, CORNER_B);
-        turnRight.put(CORNER_D, CORNER_A);
-        turnRight.put(CORNER_U, CORNER_X);
-        turnRight.put(CORNER_V, CORNER_W);
+        turnRight.put(CORNER_B, CORNER_W);
         turnRight.put(CORNER_W, CORNER_V);
-        turnRight.put(CORNER_X, CORNER_U);
+        turnRight.put(CORNER_V, CORNER_C);
 
         turnUp.put(CORNER_A, CORNER_U);
         turnUp.put(CORNER_B, CORNER_V);

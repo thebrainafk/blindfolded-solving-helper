@@ -22,7 +22,7 @@ public class GenerateEdgesM2 extends Command {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok("generateEdgesM2 message");
+        return Result.ok("generateEdgesM2 message", this.cubeState);
     }
 
 }

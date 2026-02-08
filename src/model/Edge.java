@@ -3,21 +3,29 @@ package model;
 
 public class Edge extends Piece {
     private final EdgePiece edge;
-    private EdgePiece location;
+    private EdgePiece currentLocation;
+    private EdgePiece previousLocation;
 
     public Edge(EdgePiece edge) {
         this.edge = edge;
-        this.location = edge;
+        this.currentLocation = edge;
+        this.previousLocation = edge;
         this.initialize();
     }
 
     private void initialize() {
-        this.tileLocation.put(edge.getFirstTile(), edge.getFirstTile());
-        this.tileLocation.put(edge.getSecondTile(), edge.getSecondTile());
+        this.currentTileLocation.put(edge.getFirstTile(), edge.getFirstTile());
+        this.currentTileLocation.put(edge.getSecondTile(), edge.getSecondTile());
+        this.previousTileLocation.put(edge.getFirstTile(), edge.getFirstTile());
+        this.previousTileLocation.put(edge.getSecondTile(), edge.getSecondTile());
     }
 
-    public EdgePiece getLocation() {
-        return location;
+    public EdgePiece getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public EdgePiece getPreviousLocation() {
+        return previousLocation;
     }
 
     public EdgePiece getEdge() {
@@ -25,15 +33,16 @@ public class Edge extends Piece {
     }
 
     private void swap(Edge edge) {
-        this.location = edge.getLocation();
+        this.previousLocation = this.currentLocation;
+        this.currentLocation = edge.getPreviousLocation();
     }
 
     public void turnLeft(Piece piece) {
         this.swap((Edge) piece);
         Tile nextFirstTile = this.edge.getFirstTile().getLeft();
         Tile nextSecondTile = this.edge.getSecondTile().getLeft();
-        this.tileLocation.put(this.edge.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.edge.getSecondTile(), piece.getTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.edge.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.edge.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
     }
 
 
@@ -41,8 +50,8 @@ public class Edge extends Piece {
         this.swap((Edge) piece);
         Tile nextFirstTile = this.edge.getFirstTile().getRight();
         Tile nextSecondTile = this.edge.getSecondTile().getRight();
-        this.tileLocation.put(this.edge.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.edge.getSecondTile(), piece.getTileLocation(nextSecondTile));
+        this.setTileLocation(this.edge.getFirstTile(), piece.getPreviousTileLocation(nextFirstTile));
+        this.setTileLocation(this.edge.getSecondTile(), piece.getPreviousTileLocation(nextSecondTile));
     }
 
 
@@ -50,8 +59,8 @@ public class Edge extends Piece {
         this.swap((Edge) piece);
         Tile nextFirstTile = this.edge.getFirstTile().getUp();
         Tile nextSecondTile = this.edge.getSecondTile().getUp();
-        this.tileLocation.put(this.edge.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.edge.getSecondTile(), piece.getTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.edge.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.edge.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
     }
 
 
@@ -59,23 +68,25 @@ public class Edge extends Piece {
         this.swap((Edge) piece);
         Tile nextFirstTile = this.edge.getFirstTile().getDown();
         Tile nextSecondTile = this.edge.getSecondTile().getDown();
-        this.tileLocation.put(this.edge.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.edge.getSecondTile(), piece.getTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.edge.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.edge.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
     }
 
     public void turnFront(Piece piece) {
         this.swap((Edge) piece);
         Tile nextFirstTile = this.edge.getFirstTile().getFront();
         Tile nextSecondTile = this.edge.getSecondTile().getFront();
-        this.tileLocation.put(this.edge.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.edge.getSecondTile(), piece.getTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.edge.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.edge.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
     }
 
-    public  void turnBack(Piece piece) {
+    public void turnBack(Piece piece) {
         this.swap((Edge) piece);
         Tile nextFirstTile = this.edge.getFirstTile().getBack();
         Tile nextSecondTile = this.edge.getSecondTile().getBack();
-        this.tileLocation.put(this.edge.getFirstTile(), piece.getTileLocation(nextFirstTile));
-        this.tileLocation.put(this.edge.getSecondTile(), piece.getTileLocation(nextSecondTile));
+        this.currentTileLocation.put(this.edge.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
+        this.currentTileLocation.put(this.edge.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
     }
+
+
 }
