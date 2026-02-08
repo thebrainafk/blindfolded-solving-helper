@@ -16,7 +16,7 @@ public class MovesParser {
 
         public static Moves getMovesFromChar(char moveChar) {
             for (Moves move : Moves.values()) {
-                if (move.name().equals(String.valueOf(moveChar))) {
+                if (move.name().equals(String.valueOf(moveChar).toUpperCase())) {
                     return move;
                 }
             }

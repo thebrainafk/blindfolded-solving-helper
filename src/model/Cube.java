@@ -1,5 +1,7 @@
 package model;
 
+import view.MovesParser;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,139 +42,150 @@ public class Cube {
         this.corners.put(corner.getCorner(), corner);
     }
 
-    public void turnLeft(int turns) {
-        for (int i = 0; i < turns; i++) {
-            Corner firstCorner = corners.get(CornerPiece.CORNER_A);
-            Corner secondCorner = corners.get(firstCorner.getCorner().getLeft());
-            Corner thirdCorner = corners.get(secondCorner.getCorner().getLeft());
-            Corner fourthCorner = corners.get(thirdCorner.getCorner().getLeft());
-            secondCorner.turnLeft(firstCorner);
-            thirdCorner.turnLeft(secondCorner);
-            fourthCorner.turnLeft(thirdCorner);
-            firstCorner.turnLeft(fourthCorner);
+    public void turn(MovesParser.AllMoves move) {
+        Corner firstCorner = null;
+        Corner secondCorner = null;
+        Corner thirdCorner = null;
+        Corner fourthCorner = null;
+        Edge firstEdge = null;
+        Edge secondEdge = null;
+        Edge thirdEdge = null;
+        Edge fourthEdge = null;
 
-            Edge firstEdge = edges.get(EdgePiece.EDGE_D);
-            Edge secondEdge = edges.get(firstEdge.getEdge().getLeft());
-            Edge thirdEdge = edges.get(secondEdge.getEdge().getLeft());
-            Edge fourthEdge = edges.get(thirdEdge.getEdge().getLeft());
-            secondEdge.turnLeft(firstEdge);
-            thirdEdge.turnLeft(secondEdge);
-            fourthEdge.turnLeft(thirdEdge);
-            firstEdge.turnLeft(fourthEdge);
+        switch (move.getMove()) {
+            case L -> {
+                firstCorner = corners.get(CornerPiece.CORNER_A);
+                secondCorner = corners.get(firstCorner.getCorner().getLeft());
+                thirdCorner = corners.get(secondCorner.getCorner().getLeft());
+                fourthCorner = corners.get(thirdCorner.getCorner().getLeft());
+                firstEdge = edges.get(EdgePiece.EDGE_D);
+                secondEdge = edges.get(firstEdge.getEdge().getLeft());
+                thirdEdge = edges.get(secondEdge.getEdge().getLeft());
+                fourthEdge = edges.get(thirdEdge.getEdge().getLeft());
+            }
+            case R -> {
+                firstCorner = corners.get(CornerPiece.CORNER_C);
+                secondCorner = corners.get(firstCorner.getCorner().getRight());
+                thirdCorner = corners.get(secondCorner.getCorner().getRight());
+                fourthCorner = corners.get(thirdCorner.getCorner().getRight());
+                firstEdge = edges.get(EdgePiece.EDGE_B);
+                secondEdge = edges.get(firstEdge.getEdge().getRight());
+                thirdEdge = edges.get(secondEdge.getEdge().getRight());
+                fourthEdge = edges.get(thirdEdge.getEdge().getRight());
+            }
+            case U -> {
+                firstCorner = corners.get(CornerPiece.CORNER_C);
+                secondCorner = corners.get(firstCorner.getCorner().getUp());
+                thirdCorner = corners.get(secondCorner.getCorner().getUp());
+                fourthCorner = corners.get(thirdCorner.getCorner().getUp());
+                firstEdge = edges.get(EdgePiece.EDGE_C);
+                secondEdge = edges.get(firstEdge.getEdge().getUp());
+                thirdEdge = edges.get(secondEdge.getEdge().getUp());
+                fourthEdge = edges.get(thirdEdge.getEdge().getUp());
+            }
+            case D -> {
+                firstCorner = corners.get(CornerPiece.CORNER_U);
+                secondCorner = corners.get(firstCorner.getCorner().getDown());
+                thirdCorner = corners.get(secondCorner.getCorner().getDown());
+                fourthCorner = corners.get(thirdCorner.getCorner().getDown());
+                firstEdge = edges.get(EdgePiece.EDGE_U);
+                secondEdge = edges.get(firstEdge.getEdge().getDown());
+                thirdEdge = edges.get(secondEdge.getEdge().getDown());
+                fourthEdge = edges.get(thirdEdge.getEdge().getDown());
+            }
+            case F -> {
+                firstCorner = corners.get(CornerPiece.CORNER_D);
+                secondCorner = corners.get(firstCorner.getCorner().getFront());
+                thirdCorner = corners.get(secondCorner.getCorner().getFront());
+                fourthCorner = corners.get(thirdCorner.getCorner().getFront());
+                firstEdge = edges.get(EdgePiece.EDGE_C);
+                secondEdge = edges.get(firstEdge.getEdge().getFront());
+                thirdEdge = edges.get(secondEdge.getEdge().getFront());
+                fourthEdge = edges.get(thirdEdge.getEdge().getFront());
+            }
+            case B -> {
+                firstCorner = corners.get(CornerPiece.CORNER_B);
+                secondCorner = corners.get(firstCorner.getCorner().getBack());
+                thirdCorner = corners.get(secondCorner.getCorner().getBack());
+                fourthCorner = corners.get(thirdCorner.getCorner().getBack());
+                firstEdge = edges.get(EdgePiece.EDGE_A);
+                secondEdge = edges.get(firstEdge.getEdge().getBack());
+                thirdEdge = edges.get(secondEdge.getEdge().getBack());
+                fourthEdge = edges.get(thirdEdge.getEdge().getBack());
+            }
         }
-    }
 
-    public void turnRight(int turns) {
-        for (int i = 0; i < turns; i++) {
-            Corner firstCorner = corners.get(CornerPiece.CORNER_C);
-            Corner secondCorner = corners.get(firstCorner.getCorner().getRight());
-            Corner thirdCorner = corners.get(secondCorner.getCorner().getRight());
-            Corner fourthCorner = corners.get(thirdCorner.getCorner().getRight());
-            secondCorner.turnRight(firstCorner);
-            thirdCorner.turnRight(secondCorner);
-            fourthCorner.turnRight(thirdCorner);
-            firstCorner.turnRight(fourthCorner);
+        Corner firstCornerSnapshot = new Corner(firstCorner);
+        Corner secondCornerSnapshot = new Corner(secondCorner);
+        Corner thirdCornerSnapshot = new Corner(thirdCorner);
+        Corner fourthCornerSnapshot = new Corner(fourthCorner);
 
-            Edge firstEdge = edges.get(EdgePiece.EDGE_B);
-            System.out.println(firstEdge.getEdge());
-            Edge secondEdge = edges.get(firstEdge.getEdge().getRight());
-            System.out.println(secondEdge.getEdge());
-            Edge thirdEdge = edges.get(secondEdge.getEdge().getRight());
-            System.out.println(thirdEdge.getEdge());
-            Edge fourthEdge = edges.get(thirdEdge.getEdge().getRight());
-            System.out.println(fourthEdge.getEdge());
-            secondEdge.turnRight(firstEdge);
-            thirdEdge.turnRight(secondEdge);
-            fourthEdge.turnRight(thirdEdge);
-            firstEdge.turnRight(fourthEdge);
-        }
-    }
+        Edge firstEdgeSnapshot = new Edge(firstEdge);
+        Edge secondEdgeSnapshot = new Edge(secondEdge);
+        Edge thirdEdgeSnapshot = new Edge(thirdEdge);
+        Edge fourthEdgeSnapshot = new Edge(fourthEdge);
 
-    public void turnUp(int turns) {
-        for (int i = 0; i < turns; i++) {
-            Corner firstCorner = corners.get(CornerPiece.CORNER_C);
-            Corner secondCorner = corners.get(firstCorner.getCorner().getUp());
-            Corner thirdCorner = corners.get(secondCorner.getCorner().getUp());
-            Corner fourthCorner = corners.get(thirdCorner.getCorner().getUp());
-            secondCorner.turnUp(firstCorner);
-            thirdCorner.turnUp(secondCorner);
-            fourthCorner.turnUp(thirdCorner);
-            firstCorner.turnUp(fourthCorner);
-
-            Edge firstEdge = edges.get(EdgePiece.EDGE_C);
-            Edge secondEdge = edges.get(firstEdge.getEdge().getUp());
-            Edge thirdEdge = edges.get(secondEdge.getEdge().getUp());
-            Edge fourthEdge = edges.get(thirdEdge.getEdge().getUp());
-            secondEdge.turnUp(firstEdge);
-            thirdEdge.turnUp(secondEdge);
-            fourthEdge.turnUp(thirdEdge);
-            firstEdge.turnUp(fourthEdge);
-        }
-    }
-
-    public void turnDown(int turns) {
-        for (int i = 0; i < turns; i++) {
-            Corner firstCorner = corners.get(CornerPiece.CORNER_U);
-            Corner secondCorner = corners.get(firstCorner.getCorner().getDown());
-            Corner thirdCorner = corners.get(secondCorner.getCorner().getDown());
-            Corner fourthCorner = corners.get(thirdCorner.getCorner().getDown());
-            secondCorner.turnDown(firstCorner);
-            thirdCorner.turnDown(secondCorner);
-            fourthCorner.turnDown(thirdCorner);
-            firstCorner.turnDown(fourthCorner);
-
-            Edge firstEdge = edges.get(EdgePiece.EDGE_U);
-            Edge secondEdge = edges.get(firstEdge.getEdge().getDown());
-            Edge thirdEdge = edges.get(secondEdge.getEdge().getDown());
-            Edge fourthEdge = edges.get(thirdEdge.getEdge().getDown());
-            secondEdge.turnDown(firstEdge);
-            thirdEdge.turnDown(secondEdge);
-            fourthEdge.turnDown(thirdEdge);
-            firstEdge.turnDown(fourthEdge);
-        }
-    }
-
-    public void turnFront(int turns) {
-        for (int i = 0; i < turns; i++) {
-            Corner firstCorner = corners.get(CornerPiece.CORNER_D);
-            Corner secondCorner = corners.get(firstCorner.getCorner().getFront());
-            Corner thirdCorner = corners.get(secondCorner.getCorner().getFront());
-            Corner fourthCorner = corners.get(thirdCorner.getCorner().getFront());
-            secondCorner.turnFront(firstCorner);
-            thirdCorner.turnFront(secondCorner);
-            fourthCorner.turnFront(thirdCorner);
-            firstCorner.turnFront(fourthCorner);
-
-            Edge firstEdge = edges.get(EdgePiece.EDGE_C);
-            Edge secondEdge = edges.get(firstEdge.getEdge().getFront());
-            Edge thirdEdge = edges.get(secondEdge.getEdge().getFront());
-            Edge fourthEdge = edges.get(thirdEdge.getEdge().getFront());
-            secondEdge.turnFront(firstEdge);
-            thirdEdge.turnFront(secondEdge);
-            fourthEdge.turnFront(thirdEdge);
-            firstEdge.turnFront(fourthEdge);
-        }
-    }
-
-    public void turnBack(int turns) {
-        for (int i = 0; i < turns; i++) {
-            Corner firstCorner = corners.get(CornerPiece.CORNER_B);
-            Corner secondCorner = corners.get(firstCorner.getCorner().getBack());
-            Corner thirdCorner = corners.get(secondCorner.getCorner().getBack());
-            Corner fourthCorner = corners.get(thirdCorner.getCorner().getBack());
-            secondCorner.turnBack(firstCorner);
-            thirdCorner.turnBack(secondCorner);
-            fourthCorner.turnBack(thirdCorner);
-            firstCorner.turnBack(fourthCorner);
-
-            Edge firstEdge = edges.get(EdgePiece.EDGE_A);
-            Edge secondEdge = edges.get(firstEdge.getEdge().getBack());
-            Edge thirdEdge = edges.get(secondEdge.getEdge().getBack());
-            Edge fourthEdge = edges.get(thirdEdge.getEdge().getBack());
-            secondEdge.turnBack(firstEdge);
-            thirdEdge.turnBack(secondEdge);
-            fourthEdge.turnBack(thirdEdge);
-            firstEdge.turnBack(fourthEdge);
+        switch (move.getMove()) {
+            case L -> {
+                secondCorner.turnLeft(firstCornerSnapshot);
+                thirdCorner.turnLeft(secondCornerSnapshot);
+                fourthCorner.turnLeft(thirdCornerSnapshot);
+                firstCorner.turnLeft(fourthCornerSnapshot);
+                secondEdge.turnLeft(firstEdgeSnapshot);
+                thirdEdge.turnLeft(secondEdgeSnapshot);
+                fourthEdge.turnLeft(thirdEdgeSnapshot);
+                firstEdge.turnLeft(fourthEdgeSnapshot);
+            }
+            case R -> {
+                secondCorner.turnRight(firstCornerSnapshot);
+                thirdCorner.turnRight(secondCornerSnapshot);
+                fourthCorner.turnRight(thirdCornerSnapshot);
+                firstCorner.turnRight(fourthCornerSnapshot);
+                secondEdge.turnRight(firstEdgeSnapshot);
+                thirdEdge.turnRight(secondEdgeSnapshot);
+                fourthEdge.turnRight(thirdEdgeSnapshot);
+                firstEdge.turnRight(fourthEdgeSnapshot);
+            }
+            case U -> {
+                secondCorner.turnUp(firstCornerSnapshot);
+                thirdCorner.turnUp(secondCornerSnapshot);
+                fourthCorner.turnUp(thirdCornerSnapshot);
+                firstCorner.turnUp(fourthCornerSnapshot);
+                secondEdge.turnUp(firstEdgeSnapshot);
+                thirdEdge.turnUp(secondEdgeSnapshot);
+                fourthEdge.turnUp(thirdEdgeSnapshot);
+                firstEdge.turnUp(fourthEdgeSnapshot);
+            }
+            case D -> {
+                secondCorner.turnDown(firstCornerSnapshot);
+                thirdCorner.turnDown(secondCornerSnapshot);
+                fourthCorner.turnDown(thirdCornerSnapshot);
+                firstCorner.turnDown(fourthCornerSnapshot);
+                secondEdge.turnDown(firstEdgeSnapshot);
+                thirdEdge.turnDown(secondEdgeSnapshot);
+                fourthEdge.turnDown(thirdEdgeSnapshot);
+                firstEdge.turnDown(fourthEdgeSnapshot);
+            }
+            case F -> {
+                secondCorner.turnFront(firstCornerSnapshot);
+                thirdCorner.turnFront(secondCornerSnapshot);
+                fourthCorner.turnFront(thirdCornerSnapshot);
+                firstCorner.turnFront(fourthCornerSnapshot);
+                secondEdge.turnFront(firstEdgeSnapshot);
+                thirdEdge.turnFront(secondEdgeSnapshot);
+                fourthEdge.turnFront(thirdEdgeSnapshot);
+                firstEdge.turnFront(fourthEdgeSnapshot);
+            }
+            case B -> {
+                secondCorner.turnBack(firstCornerSnapshot);
+                thirdCorner.turnBack(secondCornerSnapshot);
+                fourthCorner.turnBack(thirdCornerSnapshot);
+                firstCorner.turnBack(fourthCornerSnapshot);
+                secondEdge.turnBack(firstEdgeSnapshot);
+                thirdEdge.turnBack(secondEdgeSnapshot);
+                fourthEdge.turnBack(thirdEdgeSnapshot);
+                firstEdge.turnBack(fourthEdgeSnapshot);
+            }
         }
     }
 }

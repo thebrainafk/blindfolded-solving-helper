@@ -36,76 +36,35 @@ public enum EdgePiece {
     }
 
     private static void fillMaps() {
-        //FIXME Not yet mapped correctly
-        turnLeft.put(EDGE_A, EDGE_B);
-        turnLeft.put(EDGE_B, EDGE_C);
-        turnLeft.put(EDGE_C, EDGE_D);
-        turnLeft.put(EDGE_D, EDGE_A);
-        turnLeft.put(EDGE_F, EDGE_A);
-        turnLeft.put(EDGE_H, EDGE_B);
-        turnLeft.put(EDGE_N, EDGE_C);
-        turnLeft.put(EDGE_P, EDGE_D);
-        turnLeft.put(EDGE_U, EDGE_A);
-        turnLeft.put(EDGE_V, EDGE_B);
-        turnLeft.put(EDGE_W, EDGE_C);
-        turnLeft.put(EDGE_X, EDGE_D);
+        turnLeft.put(EDGE_D, EDGE_F);
+        turnLeft.put(EDGE_F, EDGE_X);
+        turnLeft.put(EDGE_X, EDGE_H);
+        turnLeft.put(EDGE_H, EDGE_D);
 
         turnRight.put(EDGE_B, EDGE_N);
         turnRight.put(EDGE_N, EDGE_V);
         turnRight.put(EDGE_V, EDGE_P);
         turnRight.put(EDGE_P, EDGE_B);
 
-        turnUp.put(EDGE_A, EDGE_F);
-        turnUp.put(EDGE_B, EDGE_H);
-        turnUp.put(EDGE_C, EDGE_N);
-        turnUp.put(EDGE_D, EDGE_P);
-        turnUp.put(EDGE_F, EDGE_A);
-        turnUp.put(EDGE_H, EDGE_B);
-        turnUp.put(EDGE_N, EDGE_C);
-        turnUp.put(EDGE_P, EDGE_D);
-        turnUp.put(EDGE_U, EDGE_F);
-        turnUp.put(EDGE_V, EDGE_W);
-        turnUp.put(EDGE_W, EDGE_X);
-        turnUp.put(EDGE_X, EDGE_U);
+        turnUp.put(EDGE_C, EDGE_D);
+        turnUp.put(EDGE_D, EDGE_A);
+        turnUp.put(EDGE_A, EDGE_B);
+        turnUp.put(EDGE_B, EDGE_C);
 
-        turnDown.put(EDGE_A, EDGE_P);
-        turnDown.put(EDGE_B, EDGE_N);
-        turnDown.put(EDGE_C, EDGE_H);
-        turnDown.put(EDGE_D, EDGE_F);
-        turnDown.put(EDGE_F, EDGE_D);
-        turnDown.put(EDGE_H, EDGE_C);
-        turnDown.put(EDGE_N, EDGE_B);
-        turnDown.put(EDGE_P, EDGE_A);
-        turnDown.put(EDGE_U, EDGE_X);
+        turnDown.put(EDGE_U, EDGE_V);
         turnDown.put(EDGE_V, EDGE_W);
-        turnDown.put(EDGE_W, EDGE_V);
+        turnDown.put(EDGE_W, EDGE_X);
         turnDown.put(EDGE_X, EDGE_U);
 
-        turnFront.put(EDGE_A, EDGE_U);
-        turnFront.put(EDGE_B, EDGE_V);
-        turnFront.put(EDGE_C, EDGE_W);
-        turnFront.put(EDGE_D, EDGE_X);
-        turnFront.put(EDGE_F, EDGE_U);
-        turnFront.put(EDGE_H, EDGE_W);
-        turnFront.put(EDGE_N, EDGE_X);
-        turnFront.put(EDGE_P, EDGE_V);
-        turnFront.put(EDGE_U, EDGE_A);
-        turnFront.put(EDGE_V, EDGE_B);
-        turnFront.put(EDGE_W, EDGE_C);
-        turnFront.put(EDGE_X, EDGE_D);
+        turnFront.put(EDGE_C, EDGE_P);
+        turnFront.put(EDGE_P, EDGE_U);
+        turnFront.put(EDGE_U, EDGE_F);
+        turnFront.put(EDGE_F, EDGE_C);
 
-        turnBack.put(EDGE_A, EDGE_X);
-        turnBack.put(EDGE_B, EDGE_C);
-        turnBack.put(EDGE_C, EDGE_D);
-        turnBack.put(EDGE_D, EDGE_A);
-        turnBack.put(EDGE_F, EDGE_V);
+        turnBack.put(EDGE_A, EDGE_H);
         turnBack.put(EDGE_H, EDGE_W);
-        turnBack.put(EDGE_N, EDGE_X);
-        turnBack.put(EDGE_P, EDGE_U);
-        turnBack.put(EDGE_U, EDGE_W);
-        turnBack.put(EDGE_V, EDGE_X);
-        turnBack.put(EDGE_W, EDGE_B);
-        turnBack.put(EDGE_X, EDGE_C);
+        turnBack.put(EDGE_W, EDGE_N);
+        turnBack.put(EDGE_N, EDGE_A);
     }
 
     public static EdgePiece getPieceFromTile(Tile tile) {

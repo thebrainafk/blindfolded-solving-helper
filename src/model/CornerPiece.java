@@ -34,56 +34,35 @@ public enum CornerPiece {
     }
 
     private static void fillMaps() {
-        //FIXME Not yet mapped correctly
-        turnLeft.put(CORNER_A, CORNER_B);
-        turnLeft.put(CORNER_B, CORNER_C);
-        turnLeft.put(CORNER_C, CORNER_D);
-        turnLeft.put(CORNER_D, CORNER_A);
-        turnLeft.put(CORNER_U, CORNER_V);
-        turnLeft.put(CORNER_V, CORNER_W);
-        turnLeft.put(CORNER_W, CORNER_X);
-        turnLeft.put(CORNER_X, CORNER_U);
+        turnLeft.put(CORNER_A, CORNER_D);
+        turnLeft.put(CORNER_D, CORNER_U);
+        turnLeft.put(CORNER_U, CORNER_X);
+        turnLeft.put(CORNER_X, CORNER_A);
 
         turnRight.put(CORNER_C, CORNER_B);
         turnRight.put(CORNER_B, CORNER_W);
         turnRight.put(CORNER_W, CORNER_V);
         turnRight.put(CORNER_V, CORNER_C);
 
-        turnUp.put(CORNER_A, CORNER_U);
-        turnUp.put(CORNER_B, CORNER_V);
-        turnUp.put(CORNER_C, CORNER_W);
-        turnUp.put(CORNER_D, CORNER_X);
-        turnUp.put(CORNER_U, CORNER_A);
-        turnUp.put(CORNER_V, CORNER_B);
-        turnUp.put(CORNER_W, CORNER_C);
-        turnUp.put(CORNER_X, CORNER_D);
+        turnUp.put(CORNER_C, CORNER_D);
+        turnUp.put(CORNER_D, CORNER_A);
+        turnUp.put(CORNER_A, CORNER_B);
+        turnUp.put(CORNER_B, CORNER_C);
 
-        turnDown.put(CORNER_A, CORNER_X);
-        turnDown.put(CORNER_B, CORNER_C);
-        turnDown.put(CORNER_C, CORNER_D);
-        turnDown.put(CORNER_D, CORNER_A);
-        turnDown.put(CORNER_U, CORNER_W);
-        turnDown.put(CORNER_V, CORNER_V);
-        turnDown.put(CORNER_W, CORNER_U);
-        turnDown.put(CORNER_X, CORNER_V);
+        turnDown.put(CORNER_U, CORNER_V);
+        turnDown.put(CORNER_V, CORNER_W);
+        turnDown.put(CORNER_W, CORNER_X);
+        turnDown.put(CORNER_X, CORNER_U);
 
-        turnFront.put(CORNER_A, CORNER_U);
-        turnFront.put(CORNER_B, CORNER_V);
-        turnFront.put(CORNER_C, CORNER_W);
-        turnFront.put(CORNER_D, CORNER_X);
-        turnFront.put(CORNER_U, CORNER_A);
-        turnFront.put(CORNER_V, CORNER_B);
-        turnFront.put(CORNER_W, CORNER_C);
-        turnFront.put(CORNER_X, CORNER_D);
+        turnFront.put(CORNER_D, CORNER_C);
+        turnFront.put(CORNER_C, CORNER_V);
+        turnFront.put(CORNER_V, CORNER_U);
+        turnFront.put(CORNER_U, CORNER_D);
 
+        turnBack.put(CORNER_B, CORNER_A);
         turnBack.put(CORNER_A, CORNER_X);
-        turnBack.put(CORNER_B, CORNER_C);
-        turnBack.put(CORNER_C, CORNER_D);
-        turnBack.put(CORNER_D, CORNER_A);
-        turnBack.put(CORNER_U, CORNER_W);
-        turnBack.put(CORNER_V, CORNER_V);
-        turnBack.put(CORNER_W, CORNER_U);
-        turnBack.put(CORNER_X, CORNER_V);
+        turnBack.put(CORNER_X, CORNER_W);
+        turnBack.put(CORNER_W, CORNER_B);
     }
 
     public static CornerPiece getPieceFromTile(Tile tile) {

@@ -113,9 +113,11 @@ public class WebServer {
                     <style>
                       body { font-family: Arial, sans-serif; margin: 2rem; }
                       label { display: block; margin-top: 1rem; font-weight: bold; }
-                      textarea { width: 100%%; min-height: 22rem; }
+                      textarea { width: 100%%; }
                       select, input, button { margin-top: 0.5rem; }
                       .outputs { margin-top: 2rem; }
+                      #message { height: 4rem; }
+                      #cubeState { height: 22rem; }
                     </style>
                   </head>
                   <body>

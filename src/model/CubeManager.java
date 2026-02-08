@@ -42,13 +42,8 @@ public class CubeManager {
     public void scrambleCube(List<MovesParser.AllMoves> allMoves) throws GameArgumentException {
         try {
             for (MovesParser.AllMoves move : allMoves) {
-                switch (move.getMove()) {
-                    case R -> this.cube.turnRight(move.getTurns());
-                    case L -> this.cube.turnLeft(move.getTurns());
-                    case U -> this.cube.turnUp(move.getTurns());
-                    case D -> this.cube.turnDown(move.getTurns());
-                    case F -> this.cube.turnFront(move.getTurns());
-                    case B -> this.cube.turnBack(move.getTurns());
+                for (int i = 0; i < move.getTurns(); i++) {
+                    this.cube.turn(move);
                 }
             }
         } catch (Exception e) {
