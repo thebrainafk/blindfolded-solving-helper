@@ -4,12 +4,10 @@ package model;
 public class Edge extends Piece {
     private final EdgePiece edge;
     private EdgePiece currentLocation;
-//    private EdgePiece previousLocation;
 
     public Edge(EdgePiece edge) {
         this.edge = edge;
         this.currentLocation = edge;
-//        this.previousLocation = edge;
         this.initialize();
     }
 
@@ -22,17 +20,11 @@ public class Edge extends Piece {
     private void initialize() {
         this.currentTileLocation.put(edge.getFirstTile(), edge.getFirstTile());
         this.currentTileLocation.put(edge.getSecondTile(), edge.getSecondTile());
-//        this.previousTileLocation.put(edge.getFirstTile(), edge.getFirstTile());
-//        this.previousTileLocation.put(edge.getSecondTile(), edge.getSecondTile());
     }
 
     public EdgePiece getCurrentLocation() {
         return currentLocation;
     }
-
-//    public EdgePiece getPreviousLocation() {
-//        return previousLocation;
-//    }
 
     public EdgePiece getEdge() {
         return edge;

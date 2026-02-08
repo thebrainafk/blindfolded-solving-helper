@@ -163,8 +163,8 @@ public enum Tile {
         down.put(g, s);
 
 
-        front.put(G, K);
-        front.put(L, V);
+        front.put(G, V);
+        front.put(L, K);
         front.put(U, P);
         front.put(V, M);
         front.put(K, J);

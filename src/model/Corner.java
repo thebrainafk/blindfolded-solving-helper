@@ -3,12 +3,10 @@ package model;
 public class Corner extends Piece {
     private final CornerPiece corner;
     private CornerPiece currentLocation;
-//    private CornerPiece previousLocation;
 
     public Corner(CornerPiece corner) {
         this.corner = corner;
         this.currentLocation = corner;
-//        this.previousLocation = corner;
         this.initialize();
     }
 
@@ -22,18 +20,11 @@ public class Corner extends Piece {
         this.currentTileLocation.put(corner.getFirstTile(), corner.getFirstTile());
         this.currentTileLocation.put(corner.getSecondTile(), corner.getSecondTile());
         this.currentTileLocation.put(corner.getThirdTile(), corner.getThirdTile());
-//        this.previousTileLocation.put(corner.getFirstTile(), corner.getFirstTile());
-//        this.previousTileLocation.put(corner.getSecondTile(), corner.getSecondTile());
-//        this.previousTileLocation.put(corner.getThirdTile(), corner.getThirdTile());
     }
 
     public CornerPiece getCurrentLocation() {
         return currentLocation;
     }
-
-//    public CornerPiece getPreviousLocation() {
-//        return previousLocation;
-//    }
 
     public CornerPiece getCorner() {
         return corner;

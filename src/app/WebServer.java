@@ -3,6 +3,7 @@ package app;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import model.CubeState;
+import view.CubeNetRenderer;
 import view.Result;
 import view.CubeStateFormatter;
 
@@ -21,11 +22,14 @@ public class WebServer {
     private final CommandService commandService;
     private final CommandRegistry registry;
     private final CubeStateFormatter cubeStateFormatter;
+    private final CubeNetRenderer cubeNetRenderer;
+
 
     public WebServer(CommandService commandService, CommandRegistry registry) {
         this.commandService = commandService;
         this.registry = registry;
         this.cubeStateFormatter = new CubeStateFormatter();
+        this.cubeNetRenderer = new CubeNetRenderer();
     }
 
     public void start(int port) throws IOException {
@@ -36,37 +40,7 @@ public class WebServer {
     }
 
     private void handleIndex(HttpExchange exchange) throws IOException {
-        sendHtml(exchange, renderPage(null, "", "", ""));
-        StringBuilder options = new StringBuilder();
-        for (String command : registry.listNames()) {
-            options.append("<option value=\"")
-                    .append(command)
-                    .append("\">")
-                    .append(command)
-                    .append("</option>");
-        }
-
-        String body = """
-                <!doctype html>
-                <html lang="de">
-                  <head>
-                    <meta charset="utf-8" />
-                    <title>Blindfolded Solution Generator</title>
-                  </head>
-                  <body>
-                    <h1>Command Tester</h1>
-                    <form action="/execute" method="get">
-                      <label for="name">Command</label>
-                      <select id="name" name="name">
-                """ + options + """
-                      </select>
-                      <button type="submit">Execute</button>
-                    </form>
-                  </body>
-                </html>
-                """;
-
-        sendHtml(exchange, body);
+        sendHtml(exchange, renderPage(null, "", "", "", ""));
     }
 
     private void handleExecute(HttpExchange exchange) throws IOException {
@@ -80,8 +54,9 @@ public class WebServer {
                 : "ERROR: " + result.message();
 
         String cubeStateText = formatCubeState(result.cubeState());
+        String cubeNetHtml = cubeNetRenderer.render(result.cubeState());
 
-        sendHtml(exchange, renderPage(name, arguments, message, cubeStateText));
+        sendHtml(exchange, renderPage(name, arguments, message, cubeStateText, cubeNetHtml));
     }
 
     private static Map<String, String> parseQuery(String query) {
@@ -102,7 +77,7 @@ public class WebServer {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 
-    private String renderPage(String selectedCommand, String arguments, String message, String cubeStateText) {
+    private String renderPage(String selectedCommand, String arguments, String message, String cubeStateText, String cubeNetHtml) {
         String options = buildCommandOptions(selectedCommand);
         return """
                 <!doctype html>
@@ -113,11 +88,38 @@ public class WebServer {
                     <style>
                       body { font-family: Arial, sans-serif; margin: 2rem; }
                       label { display: block; margin-top: 1rem; font-weight: bold; }
-                      textarea { width: 100%%; }
+                      textarea { width: 100%%; min-height: 22rem; }
                       select, input, button { margin-top: 0.5rem; }
                       .outputs { margin-top: 2rem; }
-                      #message { height: 4rem; }
-                      #cubeState { height: 22rem; }
+                      .cube-net {
+                        display: grid;
+                        grid-template-columns: repeat(4, auto);
+                        grid-template-rows: repeat(3, auto);
+                        gap: 12px;
+                        margin-top: 1rem;
+                      }
+                      .face {
+                        display: grid;
+                        grid-template-columns: repeat(3, 24px);
+                        grid-template-rows: repeat(3, 24px);
+                        gap: 2px;
+                        padding: 6px;
+                        background: #f2f2f2;
+                        border-radius: 6px;
+                        border: 1px solid #ddd;
+                      }
+                      .sticker {
+                        width: 24px;
+                        height: 24px;
+                        border: 1px solid #444;
+                        box-sizing: border-box;
+                      }
+                      .face-up { grid-column: 2; grid-row: 1; }
+                      .face-left { grid-column: 1; grid-row: 2; }
+                      .face-front { grid-column: 2; grid-row: 2; }
+                      .face-right { grid-column: 3; grid-row: 2; }
+                      .face-back { grid-column: 4; grid-row: 2; }
+                      .face-down { grid-column: 2; grid-row: 3; }
                     </style>
                   </head>
                   <body>
@@ -136,6 +138,8 @@ public class WebServer {
                     <div class="outputs">
                       <label for="message">Output</label>
                       <textarea id="message" readonly>%s</textarea>
+                      <label>Cube Snapshot</label>
+                      %s
                       <label for="cubeState">Cube State</label>
                       <textarea id="cubeState" readonly>%s</textarea>
                     </div>
@@ -145,6 +149,7 @@ public class WebServer {
                 options,
                 escapeHtml(arguments),
                 escapeHtml(message),
+                cubeNetHtml,
                 escapeHtml(cubeStateText)
         );
     }

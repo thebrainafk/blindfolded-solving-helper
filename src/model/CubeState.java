@@ -12,10 +12,10 @@ public class CubeState {
     }
 
     public Map<CornerPiece, Corner> getCorners() {
-        return corners;
+        return this.corners;
     }
 
     public Map<EdgePiece, Edge> getEdges() {
-        return edges;
+        return this.edges;
     }
 }

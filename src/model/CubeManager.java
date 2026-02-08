@@ -40,14 +40,10 @@ public class CubeManager {
     }
 
     public void scrambleCube(List<MovesParser.AllMoves> allMoves) throws GameArgumentException {
-        try {
-            for (MovesParser.AllMoves move : allMoves) {
-                for (int i = 0; i < move.getTurns(); i++) {
-                    this.cube.turn(move);
-                }
+        for (MovesParser.AllMoves move : allMoves) {
+            for (int i = 0; i < move.getTurns(); i++) {
+                this.cube.turn(move);
             }
-        } catch (Exception e) {
-            throw new GameArgumentException(e.getMessage());
         }
     }
 

@@ -23,7 +23,6 @@ public class Cube {
         for (EdgePiece edgePiece : EdgePiece.values()) {
             this.addEdge(new Edge(edgePiece));
         }
-
     }
 
     public Map<CornerPiece, Corner> getCorners() {
