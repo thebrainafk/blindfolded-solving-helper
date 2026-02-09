@@ -19,14 +19,13 @@ public class GenerateScramble extends Command {
 
     @Override
     public Result execute(String arguments) {
-
+        String scramble;
 
         try {
-            this.cubeManager.generateScramble();
+            scramble = this.cubeManager.generateScramble();
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
-
-        return Result.ok("R' U' L' D2 F L' F2 L2 R2 F' D' L R F' B'", this.cubeState);
+        return Result.ok(scramble, this.cubeState);
     }
 }

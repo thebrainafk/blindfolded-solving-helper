@@ -10,7 +10,7 @@ import model.Tile;
 public class CubeNetRenderer {
     private static final String COLOR_WHITE = "#FFFFFF";
     private static final String COLOR_YELLOW = "#FFFF00";
-    private static final String COLOR_BLUE = "#0000FF";
+    private static final String COLOR_BLUE = "#3A5FCD";
     private static final String COLOR_GREEN = "#008000";
     private static final String COLOR_RED = "#FF0000";
     private static final String COLOR_ORANGE = "#FFA500";
@@ -73,12 +73,18 @@ public class CubeNetRenderer {
             for (Tile tile : row) {
                 Tile location = this.getLocation(tile, cubeState);
                 String color = tile == null ? centerColor : this.getColor(location);
-                String label = tile == null ? "center" : this.getName(tile, location);
+                String label = tile == null ? "" : this.getName(tile, location);
                 builder.append("<div class=\"sticker\" style=\"background:")
                         .append(color)
                         .append("\" title=\"")
                         .append(label)
-                        .append("\"></div>");
+                        .append("\">");
+                if (!label.isEmpty()) {
+                    builder.append("<span class=\"sticker-label\">")
+                            .append(label)
+                            .append("</span>");
+                }
+                builder.append("</div>");
             }
         }
         builder.append("</div>");
@@ -86,7 +92,7 @@ public class CubeNetRenderer {
     }
 
     private String getName(Tile tile, Tile location) {
-        return location == null ? "unknown" : tile.name() + " : " + location.name();
+        return location == null ? "unknown" : tile.name() + "|" + location.name();
     }
 
     private String getColor(Tile location) {

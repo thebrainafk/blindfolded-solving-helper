@@ -113,6 +113,15 @@ public class WebServer {
                         height: 24px;
                         border: 1px solid #444;
                         box-sizing: border-box;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      }
+                      .sticker-label {
+                        font-size: 10px;
+                        font-weight: bold;
+                        color: #111;
+                        text-shadow: 0 0 2px rgba(255, 255, 255, 0.6);
                       }
                       .face-up { grid-column: 2; grid-row: 1; }
                       .face-left { grid-column: 1; grid-row: 2; }

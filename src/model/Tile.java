@@ -240,7 +240,7 @@ public enum Tile {
     private static class Constants {
         private static final String WHITE = "#FFFFFF";
         private static final String YELLOW = "#FFFF00";
-        private static final String BLUE = "#0000FF";
+        private static final String BLUE = "#3A5FCD";
         private static final String GREEN = "#008000";
         private static final String RED = "#FF0000";
         private static final String ORANGE = "#FFA500";

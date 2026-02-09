@@ -36,7 +36,9 @@ public class CubeManager {
     public void generateEdgesPochmann() throws GameArgumentException {
     }
 
-    public void generateScramble() throws GameArgumentException {
+    public String generateScramble() throws GameArgumentException {
+        ScrambleGenerator generator = new ScrambleGenerator();
+        return generator.generate();
     }
 
     public void scrambleCube(List<MovesParser.AllMoves> allMoves) throws GameArgumentException {
