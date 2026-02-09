@@ -5,11 +5,7 @@ import model.CornerPiece;
 import model.CubeState;
 import model.Edge;
 import model.EdgePiece;
-import model.Piece;
 import model.Tile;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 public class CubeNetRenderer {
     private static final String COLOR_WHITE = "#FFFFFF";
@@ -60,51 +56,24 @@ public class CubeNetRenderer {
         if (cubeState == null) {
             return "";
         }
-        Map<Tile, String> colors = buildColorMap(cubeState);
-        StringBuilder builder = new StringBuilder();
-        builder.append("<div class=\"cube-net\">");
-        builder.append(renderFace("face-up", FACE_UP, COLOR_WHITE, colors));
-        builder.append(renderFace("face-left", FACE_LEFT, COLOR_ORANGE, colors));
-        builder.append(renderFace("face-front", FACE_FRONT, COLOR_GREEN, colors));
-        builder.append(renderFace("face-right", FACE_RIGHT, COLOR_RED, colors));
-        builder.append(renderFace("face-back", FACE_BACK, COLOR_BLUE, colors));
-        builder.append(renderFace("face-down", FACE_DOWN, COLOR_YELLOW, colors));
-        builder.append("</div>");
-        return builder.toString();
+        return "<div class=\"cube-net\">" +
+                renderFace("face-up", FACE_UP, COLOR_WHITE, cubeState) +
+                renderFace("face-left", FACE_LEFT, COLOR_ORANGE, cubeState) +
+                renderFace("face-front", FACE_FRONT, COLOR_GREEN, cubeState) +
+                renderFace("face-right", FACE_RIGHT, COLOR_RED, cubeState) +
+                renderFace("face-back", FACE_BACK, COLOR_BLUE, cubeState) +
+                renderFace("face-down", FACE_DOWN, COLOR_YELLOW, cubeState) +
+                "</div>";
     }
 
-    private Map<Tile, String> buildColorMap(CubeState cubeState) {
-        Map<Tile, String> colors = new EnumMap<>(Tile.class);
-        for (Map.Entry<CornerPiece, Corner> entry : cubeState.getCorners().entrySet()) {
-            CornerPiece piece = entry.getKey();
-            Corner corner = entry.getValue();
-            addTileColor(colors, piece.getFirstTile(), corner);
-            addTileColor(colors, piece.getSecondTile(), corner);
-            addTileColor(colors, piece.getThirdTile(), corner);
-        }
-        for (Map.Entry<EdgePiece, Edge> entry : cubeState.getEdges().entrySet()) {
-            EdgePiece piece = entry.getKey();
-            Edge edge = entry.getValue();
-            addTileColor(colors, piece.getFirstTile(), edge);
-            addTileColor(colors, piece.getSecondTile(), edge);
-        }
-        return colors;
-    }
-
-    private void addTileColor(Map<Tile, String> colors, Tile tile, Piece piece) {
-        Tile location = piece.getCurrentTileLocation(tile);
-        if (location != null) {
-            colors.put(location, tile.getColor());
-        }
-    }
-
-    private String renderFace(String faceClass, Tile[][] layout, String centerColor, Map<Tile, String> colors) {
+    private String renderFace(String faceClass, Tile[][] layout, String centerColor, CubeState cubeState) {
         StringBuilder builder = new StringBuilder();
         builder.append("<div class=\"face ").append(faceClass).append("\">");
         for (Tile[] row : layout) {
             for (Tile tile : row) {
-                String color = tile == null ? centerColor : colors.getOrDefault(tile, COLOR_UNKNOWN);
-                String label = tile == null ? "center" : tile.name();
+                Tile location = this.getLocation(tile, cubeState);
+                String color = tile == null ? centerColor : this.getColor(location);
+                String label = tile == null ? "center" : this.getName(tile, location);
                 builder.append("<div class=\"sticker\" style=\"background:")
                         .append(color)
                         .append("\" title=\"")
@@ -114,5 +83,29 @@ public class CubeNetRenderer {
         }
         builder.append("</div>");
         return builder.toString();
+    }
+
+    private String getName(Tile tile, Tile location) {
+        return location == null ? "unknown" : tile.name() + " : " + location.name();
+    }
+
+    private String getColor(Tile location) {
+        return location == null ? COLOR_UNKNOWN : location.getColor();
+    }
+
+    private Tile getLocation(Tile tile, CubeState cubeState) {
+        Tile location = null;
+        CornerPiece cornerFromTile = CornerPiece.getPieceFromTile(tile);
+        EdgePiece edgeFromTile = EdgePiece.getPieceFromTile(tile);
+        if (cornerFromTile != null) {
+            Corner corner = cubeState.getCorners().get(cornerFromTile);
+            location = corner.getCurrentTileLocation(tile);
+        }
+        if (edgeFromTile != null) {
+            Edge edge = cubeState.getEdges().get(edgeFromTile);
+            location = edge.getCurrentTileLocation(tile);
+        }
+
+        return location;
     }
 }

@@ -31,7 +31,6 @@ public class Corner extends Piece {
     }
 
     private void swap(Corner corner) {
-//        this.previousLocation = this.currentLocation;
         this.currentLocation = corner.currentLocation;
     }
 
