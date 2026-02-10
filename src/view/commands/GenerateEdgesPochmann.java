@@ -24,7 +24,7 @@ public class GenerateEdgesPochmann extends Command {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok(translation, cubeState);
+        return Result.edge(translation);
     }
 
 }

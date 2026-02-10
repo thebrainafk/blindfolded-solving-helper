@@ -1,42 +1,66 @@
 package view;
 
-import model.CubeState;
-
 import java.util.Objects;
 
 public final class Result {
 
     private final boolean success;
-    private final String message;
-    private final CubeState cubeState;
+    private final String errorMessage;
+    private final String scramble;
+    private final String edgeAlgorithmOutput;
+    private final String cornerAlgorithmOutput;
 
-    private Result(boolean success, String message, CubeState cubeState) {
+    private Result(
+            boolean success,
+            String errorMessage,
+            String scramble,
+            String edgeAlgorithmOutput,
+            String cornerAlgorithmOutput
+    ) {
         this.success = success;
-        this.message = Objects.requireNonNull(message);
-        this.cubeState = cubeState;
+        this.errorMessage = Objects.requireNonNull(errorMessage);
+        this.scramble = Objects.requireNonNull(scramble);
+        this.edgeAlgorithmOutput = Objects.requireNonNull(edgeAlgorithmOutput);
+        this.cornerAlgorithmOutput = Objects.requireNonNull(cornerAlgorithmOutput);
     }
 
-    public static Result ok(String message, CubeState cubeState) {
-        return new Result(true, message, cubeState);
+    public static Result none() {
+        return new Result(true, "", "", "", "");
     }
 
-    public static Result ok(CubeState cubeState) {
-        return new Result(true, "", cubeState);
+    public static Result scramble(String scramble) {
+        return new Result(true, "", scramble, "", "");
+    }
+
+    public static Result edge(String edgeAlgorithmOutput) {
+        return new Result(true, "", "", edgeAlgorithmOutput, "");
+    }
+
+    public static Result corner(String cornerAlgorithmOutput) {
+        return new Result(true, "", "", "", cornerAlgorithmOutput);
     }
 
     public static Result error(String message) {
-        return new Result(false, message, null);
+        return new Result(false, message, "", "", "");
     }
 
     public boolean success() {
         return success;
     }
 
-    public String message() {
-        return message;
+    public String errorMessage() {
+        return errorMessage;
     }
 
-    public CubeState cubeState() {
-        return cubeState;
+    public String scramble() {
+        return scramble;
+    }
+
+    public String edgeAlgorithmOutput() {
+        return edgeAlgorithmOutput;
+    }
+
+    public String cornerAlgorithmOutput() {
+        return cornerAlgorithmOutput;
     }
 }

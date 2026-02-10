@@ -26,11 +26,6 @@ public class ScrambleCube extends Command {
         }
 
         List<MovesParser.AllMoves> allMoves = MovesParser.getMovesFromScramble(arguments);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (MovesParser.AllMoves move : allMoves) {
-            stringBuilder.append(move.name());
-            stringBuilder.append(" ");
-        }
 
         try {
             this.cubeManager.scrambleCube(allMoves);
@@ -38,7 +33,7 @@ public class ScrambleCube extends Command {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok(stringBuilder.toString(), this.getCurrentCubeState());
+        return Result.scramble(arguments.trim());
     }
 
 }

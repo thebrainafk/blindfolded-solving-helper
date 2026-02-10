@@ -1,8 +1,8 @@
 import app.CommandRegistry;
+import app.CommandRequest;
 import app.CommandService;
 import app.WebServer;
 import model.CubeManager;
-import app.CommandRequest;
 import view.Result;
 
 /**
@@ -20,7 +20,7 @@ public final class Main {
         CommandRegistry registry = new CommandRegistry(cubeManager);
         CommandService service = new CommandService(registry);
 
-        WebServer webServer = new WebServer(service, registry);
+        WebServer webServer = new WebServer(service, cubeManager);
         try {
             webServer.start(8080);
             System.out.println("Web server running at http://localhost:8080");
@@ -31,7 +31,7 @@ public final class Main {
         if (result.success()) {
             System.out.println("Command executed successfully.");
         } else {
-            System.out.printf("ERROR: %s%n", result.message());
+            System.out.printf("ERROR: %s%n", result.errorMessage());
         }
     }
 }

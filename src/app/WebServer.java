@@ -2,10 +2,10 @@ package app;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import model.CubeManager;
 import model.CubeState;
 import view.CubeNetRenderer;
 import view.Result;
-import view.CubeStateFormatter;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,16 +19,16 @@ import java.util.Map;
  * Minimal HTTP server exposing command execution for a web UI.
  */
 public class WebServer {
+    private static final String DEFAULT_EDGE_ALGORITHM = "generateEdgesM2";
+    private static final String DEFAULT_CORNER_ALGORITHM = "generateCornersPochmann";
+
     private final CommandService commandService;
-    private final CommandRegistry registry;
-    private final CubeStateFormatter cubeStateFormatter;
+    private final CubeManager cubeManager;
     private final CubeNetRenderer cubeNetRenderer;
 
-
-    public WebServer(CommandService commandService, CommandRegistry registry) {
+    public WebServer(CommandService commandService, CubeManager cubeManager) {
         this.commandService = commandService;
-        this.registry = registry;
-        this.cubeStateFormatter = new CubeStateFormatter();
+        this.cubeManager = cubeManager;
         this.cubeNetRenderer = new CubeNetRenderer();
     }
 
@@ -40,23 +40,88 @@ public class WebServer {
     }
 
     private void handleIndex(HttpExchange exchange) throws IOException {
-        sendHtml(exchange, renderPage(null, "", "", "", ""));
+        CubeState cubeState = new CubeState(cubeManager.getCube());
+        sendHtml(exchange, renderPage(new PageModel(
+                "",
+                "",
+                "",
+                DEFAULT_EDGE_ALGORITHM,
+                DEFAULT_CORNER_ALGORITHM,
+                cubeManager.isMemoryHelperEnabled(),
+                cubeNetRenderer.render(cubeState),
+                ""
+        )));
     }
 
     private void handleExecute(HttpExchange exchange) throws IOException {
         Map<String, String> params = parseQuery(exchange.getRequestURI().getRawQuery());
-        String name = params.get("name");
-        String arguments = params.getOrDefault("args", "");
-        Result result = commandService.execute(new CommandRequest(name, arguments));
+        String action = params.getOrDefault("action", "");
+        String scrambleText = params.getOrDefault("scramble", "").trim();
+        String edgeAlgorithm = params.getOrDefault("edgeAlgorithm", DEFAULT_EDGE_ALGORITHM);
+        String cornerAlgorithm = params.getOrDefault("cornerAlgorithm", DEFAULT_CORNER_ALGORITHM);
+        boolean memoryHelperEnabledInForm = "on".equals(params.get("memoryHelper"));
 
-        String message = result.success()
-                ? result.message()
-                : "ERROR: " + result.message();
+        String errorOutput = "";
+        String edgeOutput = "";
+        String cornerOutput = "";
 
-        String cubeStateText = formatCubeState(result.cubeState());
-        String cubeNetHtml = cubeNetRenderer.render(result.cubeState());
+        if (cubeManager.isMemoryHelperEnabled() != memoryHelperEnabledInForm) {
+            Result toggleResult = executeCommand("toggleMemoryHelper", "");
+            if (!toggleResult.success()) {
+                errorOutput = toggleResult.errorMessage();
+            }
+        }
 
-        sendHtml(exchange, renderPage(name, arguments, message, cubeStateText, cubeNetHtml));
+        if (errorOutput.isEmpty()) {
+            if ("generateScramble".equals(action)) {
+                Result scrambleResult = executeCommand("generateScramble", "");
+                if (scrambleResult.success()) {
+                    scrambleText = scrambleResult.scramble();
+                } else {
+                    errorOutput = scrambleResult.errorMessage();
+                }
+            } else if ("scrambleCube".equals(action)) {
+                Result resetResult = executeCommand("resetCube", "");
+                if (!resetResult.success()) {
+                    errorOutput = resetResult.errorMessage();
+                } else {
+                    Result scrambleResult = executeCommand("scrambleCube", scrambleText);
+                    if (!scrambleResult.success()) {
+                        errorOutput = scrambleResult.errorMessage();
+                    } else {
+                        scrambleText = scrambleResult.scramble();
+                        Result edgeResult = executeCommand(edgeAlgorithm, "");
+                        if (!edgeResult.success()) {
+                            errorOutput = edgeResult.errorMessage();
+                        } else {
+                            edgeOutput = edgeResult.edgeAlgorithmOutput();
+                            Result cornerResult = executeCommand(cornerAlgorithm, "");
+                            if (!cornerResult.success()) {
+                                errorOutput = cornerResult.errorMessage();
+                            } else {
+                                cornerOutput = cornerResult.cornerAlgorithmOutput();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        CubeState cubeState = new CubeState(cubeManager.getCube());
+        sendHtml(exchange, renderPage(new PageModel(
+                errorOutput,
+                edgeOutput,
+                cornerOutput,
+                edgeAlgorithm,
+                cornerAlgorithm,
+                cubeManager.isMemoryHelperEnabled(),
+                cubeNetRenderer.render(cubeState),
+                scrambleText
+        )));
+    }
+
+    private Result executeCommand(String name, String args) {
+        return commandService.execute(new CommandRequest(name, args));
     }
 
     private static Map<String, String> parseQuery(String query) {
@@ -77,8 +142,10 @@ public class WebServer {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 
-    private String renderPage(String selectedCommand, String arguments, String message, String cubeStateText, String cubeNetHtml) {
-        String options = buildCommandOptions(selectedCommand);
+    private String renderPage(PageModel pageModel) {
+        String edgeAlgorithmOptions = buildEdgeAlgorithmOptions(pageModel.edgeAlgorithm());
+        String cornerAlgorithmOptions = buildCornerAlgorithmOptions(pageModel.cornerAlgorithm());
+
         return """
                 <!doctype html>
                 <html lang="de">
@@ -86,11 +153,16 @@ public class WebServer {
                     <meta charset="utf-8" />
                     <title>Blindfolded Solution Generator</title>
                     <style>
-                      body { font-family: Arial, sans-serif; margin: 2rem; }
-                      label { display: block; margin-top: 1rem; font-weight: bold; }
-                      textarea { width: 100%%; min-height: 22rem; }
-                      select, input, button { margin-top: 0.5rem; }
-                      .outputs { margin-top: 2rem; }
+                      body { font-family: Arial, sans-serif; margin: 2rem; background: #f8fafc; color: #111827; }
+                      h1 { margin-bottom: 1.5rem; }
+                      .panel { background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+                      .controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+                      label { display: block; margin-top: 0.25rem; font-weight: bold; }
+                      textarea, select, button { width: 100%%; margin-top: 0.5rem; }
+                      #scramble { min-height: 2.6rem; max-height: 14rem; resize: none; overflow-y: hidden; }
+                      .readonly { background: #f3f4f6; min-height: 9rem; }
+                      .button-row { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-top: 1rem; }
+                      .switch-row { margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; }
                       .cube-net {
                         display: grid;
                         grid-template-columns: repeat(4, auto);
@@ -132,58 +204,102 @@ public class WebServer {
                     </style>
                   </head>
                   <body>
-                    <h1>Command Tester</h1>
+                    <h1>Blindfolded Trainer Dashboard</h1>
                     <form action="/execute" method="get">
-                      <label for="name">Command</label>
-                      <select id="name" name="name">
+                      <div class="panel controls">
+                        <div>
+                          <label for="edgeAlgorithm">Edge Algorithmus</label>
+                          <select id="edgeAlgorithm" name="edgeAlgorithm">
                 %s
-                      </select>
-                      <label for="args">Arguments</label>
-                      <input id="args" name="args" type="text" value="%s" />
-                      <div>
-                        <button type="submit">Execute</button>
+                          </select>
+                        </div>
+                        <div>
+                          <label for="cornerAlgorithm">Corner Algorithmus</label>
+                          <select id="cornerAlgorithm" name="cornerAlgorithm">
+                %s
+                          </select>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                          <label for="scramble">Scramble</label>
+                          <textarea id="scramble" name="scramble">%s</textarea>
+                          <button type="submit" name="action" value="generateScramble">GenerateScramble</button>
+                        </div>
+                      </div>
+
+                      <div class="panel">
+                        <div class="switch-row">
+                          <input id="memoryHelper" type="checkbox" name="memoryHelper" %s />
+                          <label for="memoryHelper" style="margin: 0;">Memory Helper</label>
+                        </div>
+                        <div class="button-row">
+                          <button type="submit" name="action" value="scrambleCube">ScrambleCube + Algos</button>
+                        </div>
+                      </div>
+
+                      <div class="panel">
+                        <textarea id="message" class="readonly" readonly>%s</textarea>
+                        <label>Cube Snapshot</label>
+                        %s
                       </div>
                     </form>
-                    <div class="outputs">
-                      <label for="message">Output</label>
-                      <textarea id="message" readonly>%s</textarea>
-                      <label>Cube Snapshot</label>
-                      %s
-                      <label for="cubeState">Cube State</label>
-                      <textarea id="cubeState" readonly>%s</textarea>
-                    </div>
+                    <script>
+                      const scrambleInput = document.getElementById('scramble');
+                      const autoResize = () => {
+                        scrambleInput.style.height = 'auto';
+                        scrambleInput.style.height = `${scrambleInput.scrollHeight}px`;
+                      };
+                      scrambleInput.addEventListener('input', autoResize);
+                      autoResize();
+                    </script>
                   </body>
                 </html>
                 """.formatted(
-                options,
-                escapeHtml(arguments),
-                escapeHtml(message),
-                cubeNetHtml,
-                escapeHtml(cubeStateText)
+                edgeAlgorithmOptions,
+                cornerAlgorithmOptions,
+                escapeHtml(pageModel.scramble()),
+                pageModel.memoryHelperEnabled() ? "checked" : "",
+                escapeHtml(buildOutput(pageModel.errorOutput(), pageModel.edgeOutput(), pageModel.cornerOutput())),
+                pageModel.cubeNetHtml()
         );
     }
 
-    private String buildCommandOptions(String selectedCommand) {
-        StringBuilder options = new StringBuilder();
-        for (String command : registry.listNames()) {
-            options.append("<option value=\"")
-                    .append(command)
-                    .append("\"");
-            if (command.equals(selectedCommand)) {
-                options.append(" selected");
-            }
-            options.append(">")
-                    .append(command)
-                    .append("</option>");
+    private String buildOutput(String errorOutput, String edgeOutput, String cornerOutput) {
+        if (!errorOutput.isBlank()) {
+            return "ERROR: " + errorOutput;
         }
+
+        String trimmedEdge = edgeOutput.trim();
+        String trimmedCorner = cornerOutput.trim();
+        if (trimmedEdge.isBlank() && trimmedCorner.isBlank()) {
+            return "";
+        }
+
+        return "Edge Pairs\n" + trimmedEdge + "\n\nCorner Pairs\n" + trimmedCorner;
+    }
+
+    private String buildEdgeAlgorithmOptions(String selectedEdgeAlgorithm) {
+        StringBuilder options = new StringBuilder();
+        options.append(buildOption("generateEdgesM2", selectedEdgeAlgorithm, "generateEdgesM2"));
+        options.append(buildOption("generateEdgesPochmann", selectedEdgeAlgorithm, "generateEdgesPochmann"));
         return options.toString();
     }
 
-    private String formatCubeState(CubeState cubeState) {
-        if (cubeState == null) {
-            return "";
+    private String buildCornerAlgorithmOptions(String selectedCornerAlgorithm) {
+        return buildOption("generateCornersPochmann", selectedCornerAlgorithm, "generateCornersPochmann");
+    }
+
+    private String buildOption(String value, String selectedValue, String label) {
+        StringBuilder option = new StringBuilder();
+        option.append("<option value=\"")
+                .append(value)
+                .append("\"");
+        if (value.equals(selectedValue)) {
+            option.append(" selected");
         }
-        return cubeStateFormatter.format(cubeState);
+        option.append(">")
+                .append(label)
+                .append("</option>");
+        return option.toString();
     }
 
     private static String escapeHtml(String value) {
@@ -203,5 +319,17 @@ public class WebServer {
         try (OutputStream output = exchange.getResponseBody()) {
             output.write(bytes);
         }
+    }
+
+    private record PageModel(
+            String errorOutput,
+            String edgeOutput,
+            String cornerOutput,
+            String edgeAlgorithm,
+            String cornerAlgorithm,
+            boolean memoryHelperEnabled,
+            String cubeNetHtml,
+            String scramble
+    ) {
     }
 }
