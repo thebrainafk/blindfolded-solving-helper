@@ -5,6 +5,7 @@ import model.cube.Cube;
 import model.cube.Edge;
 import model.cube.EdgePiece;
 import model.cube.Tile;
+import resources.TileOrderComparatorFactory;
 import view.MovesParser;
 
 import java.util.List;
@@ -33,7 +34,12 @@ public class CubeManager {
     }
 
     public String generateCornersPochmann(CubeState cubeState) throws GameArgumentException {
-        GenerateTranslation generateTranslation = new GenerateTranslation(cubeState, memoryHelper, Tile.E);
+        GenerateTranslation generateTranslation = new GenerateTranslation(
+                cubeState,
+                memoryHelper,
+                Tile.E,
+                TileOrderComparatorFactory.fromResource("resources/corners_pochmann_tile_order.txt")
+        );
         List<Tile> tileSequence = generateTranslation.generateTileSequence();
         return generateTranslation.translatePochmann(tileSequence);
     }
