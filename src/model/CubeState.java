@@ -1,5 +1,11 @@
 package model;
 
+import model.cube.Corner;
+import model.cube.CornerPiece;
+import model.cube.Cube;
+import model.cube.Edge;
+import model.cube.EdgePiece;
+
 import java.util.Map;
 
 public class CubeState {

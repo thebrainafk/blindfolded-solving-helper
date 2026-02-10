@@ -14,15 +14,15 @@ public class GenerateEdgesPochmann extends Command {
 
     @Override
     public Result execute(String arguments) {
-
+        String translation;
 
         try {
-            this.cubeManager.generateEdgesPochmann();
+            translation = this.cubeManager.generateEdgesPochmann(this.cubeState);
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok("generateEdgesPochmann message", this.cubeState);
+        return Result.ok(translation, this.cubeState);
     }
 
 }

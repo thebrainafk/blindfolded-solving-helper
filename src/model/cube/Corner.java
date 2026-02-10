@@ -1,4 +1,4 @@
-package model;
+package model.cube;
 
 public class Corner extends Piece {
     private final CornerPiece corner;

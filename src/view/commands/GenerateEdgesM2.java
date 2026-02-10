@@ -14,15 +14,15 @@ public class GenerateEdgesM2 extends Command {
 
     @Override
     public Result execute(String arguments) {
-
+        String translation;
 
         try {
-            this.cubeManager.generateEdgesM2();
+            translation = this.cubeManager.generateEdgesM2(this.cubeState);
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok("generateEdgesM2 message", this.cubeState);
+        return Result.ok(translation, this.cubeState);
     }
 
 }

@@ -1,4 +1,4 @@
-package model;
+package model.cube;
 
 import java.util.HashMap;
 import java.util.Map;

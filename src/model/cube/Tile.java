@@ -1,59 +1,64 @@
-package model;
+package model.cube;
+
+import model.CubeState;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public enum Tile {
-    A(Constants.WHITE),
-    B(Constants.WHITE),
-    C(Constants.WHITE),
-    D(Constants.WHITE),
-    E(Constants.ORANGE),
-    F(Constants.ORANGE),
-    G(Constants.ORANGE),
-    H(Constants.ORANGE),
-    I(Constants.GREEN),
-    J(Constants.GREEN),
-    K(Constants.GREEN),
-    L(Constants.GREEN),
-    M(Constants.RED),
-    N(Constants.RED),
-    O(Constants.RED),
-    P(Constants.RED),
-    Q(Constants.BLUE),
-    R(Constants.BLUE),
-    S(Constants.BLUE),
-    T(Constants.BLUE),
-    U(Constants.YELLOW),
-    V(Constants.YELLOW),
-    W(Constants.YELLOW),
-    X(Constants.YELLOW),
-    a(Constants.WHITE),
-    b(Constants.WHITE),
-    c(Constants.WHITE),
-    d(Constants.WHITE),
-    e(Constants.ORANGE),
-    f(Constants.ORANGE),
-    g(Constants.ORANGE),
-    h(Constants.ORANGE),
-    i(Constants.GREEN),
-    j(Constants.GREEN),
-    k(Constants.GREEN),
-    l(Constants.GREEN),
-    m(Constants.RED),
-    n(Constants.RED),
-    o(Constants.RED),
-    p(Constants.RED),
-    q(Constants.BLUE),
-    r(Constants.BLUE),
-    s(Constants.BLUE),
-    t(Constants.BLUE),
-    u(Constants.YELLOW),
-    v(Constants.YELLOW),
-    w(Constants.YELLOW),
-    x(Constants.YELLOW);
+    A(Constants.WHITE, 0, 0),
+    B(Constants.WHITE, 1, 1),
+    C(Constants.WHITE, 2, 2),
+    D(Constants.WHITE, 3, 3),
+    E(Constants.ORANGE, 4, 4),
+    F(Constants.ORANGE, 5, 5),
+    G(Constants.ORANGE, 6, 6),
+    H(Constants.ORANGE, 7, 7),
+    I(Constants.GREEN, 8, 8),
+    J(Constants.GREEN, 9, 9),
+    K(Constants.GREEN, 10, 10),
+    L(Constants.GREEN, 11, 11),
+    M(Constants.RED, 12, 12),
+    N(Constants.RED, 13, 13),
+    O(Constants.RED, 14, 14),
+    P(Constants.RED, 15, 15),
+    Q(Constants.BLUE, 16, 16),
+    R(Constants.BLUE, 17, 17),
+    S(Constants.BLUE, 18, 18),
+    T(Constants.BLUE, 19, 19),
+    U(Constants.YELLOW, 20, 20),
+    V(Constants.YELLOW, 21, 21),
+    W(Constants.YELLOW, 22, 22),
+    X(Constants.YELLOW, 23, 23),
+    a(Constants.WHITE, 0, 0),
+    b(Constants.WHITE, 1, 1),
+    c(Constants.WHITE, 2, 2),
+    d(Constants.WHITE, 3, 3),
+    e(Constants.ORANGE, 4, 4),
+    f(Constants.ORANGE, 5, 5),
+    g(Constants.ORANGE, 6, 6),
+    h(Constants.ORANGE, 7, 7),
+    i(Constants.GREEN, 8, 8),
+    j(Constants.GREEN, 9, 9),
+    k(Constants.GREEN, 10, 10),
+    l(Constants.GREEN, 11, 11),
+    m(Constants.RED, 12, 12),
+    n(Constants.RED, 13, 13),
+    o(Constants.RED, 14, 14),
+    p(Constants.RED, 15, 15),
+    q(Constants.BLUE, 16, 16),
+    r(Constants.BLUE, 17, 17),
+    s(Constants.BLUE, 18, 18),
+    t(Constants.BLUE, 19, 19),
+    u(Constants.YELLOW, 20, 20),
+    v(Constants.YELLOW, 21, 21),
+    w(Constants.YELLOW, 22, 22),
+    x(Constants.YELLOW, 23, 23);
 
     private final String color;
+    private final int row;
+    private final int column;
+
     private static final Map<Tile, Tile> left = new HashMap<>();
     private static final Map<Tile, Tile> right = new HashMap<>();
     private static final Map<Tile, Tile> up = new HashMap<>();
@@ -62,8 +67,14 @@ public enum Tile {
     private static final Map<Tile, Tile> back = new HashMap<>();
 
 
-    Tile(String color) {
+    Tile(String color, int row, int column) {
         this.color = color;
+        this.row = row;
+        this.column = column;
+    }
+
+    public int[] getCoordinates(Tile tile) {
+        return new int[]{this.row, tile.column};
     }
 
     static {
@@ -235,6 +246,42 @@ public enum Tile {
 
     public String getColor() {
         return this.color;
+    }
+
+    public Tile getLocation(CubeState cubeState) {
+        Tile location = null;
+        CornerPiece cornerFromTile = CornerPiece.getPieceFromTile(this);
+        EdgePiece edgeFromTile = EdgePiece.getPieceFromTile(this);
+        if (cornerFromTile != null) {
+            Corner corner = cubeState.getCorners().get(cornerFromTile);
+            location = corner.getCurrentTileLocation(this);
+        }
+        if (edgeFromTile != null) {
+            Edge edge = cubeState.getEdges().get(edgeFromTile);
+            location = edge.getCurrentTileLocation(this);
+        }
+
+        return location;
+    }
+
+    public Tile getOppositeTile() {
+        switch (this) {
+            case c -> {
+                return w;
+            }
+            case w -> {
+                return c;
+            }
+            case i -> {
+                return s;
+            }
+            case s -> {
+                return i;
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 
     private static class Constants {

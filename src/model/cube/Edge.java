@@ -1,4 +1,4 @@
-package model;
+package model.cube;
 
 
 public class Edge extends Piece {

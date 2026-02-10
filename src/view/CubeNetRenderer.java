@@ -1,11 +1,7 @@
 package view;
 
-import model.Corner;
-import model.CornerPiece;
 import model.CubeState;
-import model.Edge;
-import model.EdgePiece;
-import model.Tile;
+import model.cube.Tile;
 
 public class CubeNetRenderer {
     private static final String COLOR_WHITE = "#FFFFFF";
@@ -91,27 +87,15 @@ public class CubeNetRenderer {
         return builder.toString();
     }
 
+    private Tile getLocation(Tile tile, CubeState cubeState) {
+        return tile == null ? null : tile.getLocation(cubeState);
+    }
+
     private String getName(Tile tile, Tile location) {
         return location == null ? "unknown" : tile.name() + "|" + location.name();
     }
 
     private String getColor(Tile location) {
         return location == null ? COLOR_UNKNOWN : location.getColor();
-    }
-
-    private Tile getLocation(Tile tile, CubeState cubeState) {
-        Tile location = null;
-        CornerPiece cornerFromTile = CornerPiece.getPieceFromTile(tile);
-        EdgePiece edgeFromTile = EdgePiece.getPieceFromTile(tile);
-        if (cornerFromTile != null) {
-            Corner corner = cubeState.getCorners().get(cornerFromTile);
-            location = corner.getCurrentTileLocation(tile);
-        }
-        if (edgeFromTile != null) {
-            Edge edge = cubeState.getEdges().get(edgeFromTile);
-            location = edge.getCurrentTileLocation(tile);
-        }
-
-        return location;
     }
 }

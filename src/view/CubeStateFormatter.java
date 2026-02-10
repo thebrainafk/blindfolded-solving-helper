@@ -1,12 +1,12 @@
 package view;
 
-import model.Corner;
-import model.CornerPiece;
+import model.cube.Corner;
+import model.cube.CornerPiece;
 import model.CubeState;
-import model.Edge;
-import model.EdgePiece;
-import model.Piece;
-import model.Tile;
+import model.cube.Edge;
+import model.cube.EdgePiece;
+import model.cube.Piece;
+import model.cube.Tile;
 
 import java.util.ArrayList;
 import java.util.Comparator;
