@@ -24,7 +24,7 @@ public class GenerateCornersPochmann extends Command {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok(translation, cubeState);
+        return Result.corner(translation, cubeState);
     }
 
 }

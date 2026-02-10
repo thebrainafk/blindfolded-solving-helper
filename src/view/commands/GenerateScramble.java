@@ -26,6 +26,6 @@ public class GenerateScramble extends Command {
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
-        return Result.ok(scramble, this.getCurrentCubeState());
+        return Result.scramble(scramble, this.getCurrentCubeState());
     }
 }

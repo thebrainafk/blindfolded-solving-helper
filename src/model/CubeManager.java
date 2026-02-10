@@ -85,4 +85,8 @@ public class CubeManager {
         this.memoryHelper = !this.memoryHelper;
         return this.memoryHelper;
     }
+
+    public boolean isMemoryHelperEnabled() {
+        return this.memoryHelper;
+    }
 }
