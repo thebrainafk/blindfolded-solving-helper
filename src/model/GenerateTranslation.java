@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class GenerateTranslation {
@@ -18,16 +19,23 @@ public class GenerateTranslation {
     private final CubeState cubeState;
     private final Tile buffer;
     private final boolean memoryHelper;
+    private final Comparator<Tile> bufferComparator;
     private MemoryWordTable memoryWordTable;
     private Tile currentTile;
     private Tile currentBuffer;
 
     public GenerateTranslation(CubeState cubeState, boolean memoryHelper, Tile buffer) throws GameArgumentException {
+        this(cubeState, memoryHelper, buffer, null);
+    }
+
+    public GenerateTranslation(CubeState cubeState, boolean memoryHelper, Tile buffer,
+                               Comparator<Tile> bufferComparator) throws GameArgumentException {
         this.builder = new StringBuilder();
         this.allTiles = new ArrayList<>(List.of(Tile.values()));
         this.removeTileFromList(buffer);
         this.cubeState = cubeState;
         this.memoryHelper = memoryHelper;
+        this.bufferComparator = bufferComparator;
         this.currentTile = buffer;
         this.buffer = buffer;
         this.currentBuffer = buffer;
@@ -155,7 +163,11 @@ public class GenerateTranslation {
     }
 
     private void setNewBuffer() {
-        Collections.shuffle(this.allTiles);
+        if (this.bufferComparator != null) {
+            this.allTiles.sort(this.bufferComparator);
+        } else {
+            Collections.shuffle(this.allTiles);
+        }
         this.currentBuffer = this.allTiles.removeFirst();
         this.currentTile = currentBuffer;
     }
