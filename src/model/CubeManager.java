@@ -2,10 +2,13 @@ package model;
 
 
 import model.cube.Cube;
+import model.cube.Edge;
+import model.cube.EdgePiece;
 import model.cube.Tile;
 import view.MovesParser;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * asdf.
@@ -39,35 +42,28 @@ public class CubeManager {
         GenerateTranslation cornerTranslator = new GenerateTranslation(cubeState, memoryHelper, Tile.E);
         List<Tile> CornerTileSequence = cornerTranslator.generateTileSequence();
 
-        GenerateTranslation generateTranslation = new GenerateTranslation(cubeState, memoryHelper, Tile.a);
-        List<Tile> M2TileSequence = generateTranslation.generateTileSequence();
-
         if (CornerTileSequence.size() % 2 == 1) {
-            for (int i = 0; i < M2TileSequence.size(); i++) {
-                Tile tile = M2TileSequence.get(i);
-                switch (tile) {
-                    case a:
-                        M2TileSequence.set(i, Tile.d);
-                        break;
-                    case d:
-                        M2TileSequence.set(i, Tile.a);
-                        break;
-                    case q:
-                        M2TileSequence.set(i, Tile.e);
-                        break;
-                    case e:
-                        M2TileSequence.set(i, Tile.q);
-                        break;
-                    default:
-                        break;
+            Map<EdgePiece, Edge> edges = cubeState.getEdges();
+            for (Edge edge : edges.values()) {
+                if (edge.getCurrentLocation().equals(EdgePiece.EDGE_D)) {
+                    edge.swapTileLocations(edge.getEdge().getFirstTile());
+                    edge.swapTileLocations(edge.getEdge().getSecondTile());
+                }
+                if (edge.getCurrentLocation().equals(EdgePiece.EDGE_A)) {
+                    edge.swapTileLocations(edge.getEdge().getFirstTile());
+                    edge.swapTileLocations(edge.getEdge().getSecondTile());
                 }
             }
         }
+
+        GenerateTranslation generateTranslation = new GenerateTranslation(cubeState, memoryHelper, Tile.u);
+        List<Tile> M2TileSequence = generateTranslation.generateTileSequence();
+
         return generateTranslation.translateEdgesM2(M2TileSequence);
     }
 
     public String generateEdgesPochmann(CubeState cubeState) throws GameArgumentException {
-        GenerateTranslation generateTranslation = new GenerateTranslation(cubeState, memoryHelper, Tile.d);
+        GenerateTranslation generateTranslation = new GenerateTranslation(cubeState, memoryHelper, Tile.b);
         List<Tile> tileSequence = generateTranslation.generateTileSequence();
         return generateTranslation.translatePochmann(tileSequence);
     }
@@ -85,7 +81,8 @@ public class CubeManager {
         }
     }
 
-    public void toggleMemoryHelper() {
+    public boolean toggleMemoryHelper() {
         this.memoryHelper = !this.memoryHelper;
+        return this.memoryHelper;
     }
 }

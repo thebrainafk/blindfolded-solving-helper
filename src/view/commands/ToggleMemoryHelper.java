@@ -14,9 +14,10 @@ public class ToggleMemoryHelper extends Command {
     @Override
     public Result execute(String arguments) {
 
-        this.cubeManager.toggleMemoryHelper();
+        boolean memoryHelper = this.cubeManager.toggleMemoryHelper();
+        String message = memoryHelper ? "memory helper enabled" : "memory helper disabled";
 
-        return Result.ok("memory helper toggled", this.cubeState);
+        return Result.ok(message, this.getCurrentCubeState());
     }
 
 }

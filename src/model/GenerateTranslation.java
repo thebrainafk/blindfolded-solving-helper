@@ -14,7 +14,6 @@ import java.util.List;
 public class GenerateTranslation {
 
     private final StringBuilder builder;
-    //    private final List<Tile> tileSequence;
     private final List<Tile> allTiles;
     private final CubeState cubeState;
     private final Tile buffer;
@@ -25,8 +24,8 @@ public class GenerateTranslation {
 
     public GenerateTranslation(CubeState cubeState, boolean memoryHelper, Tile buffer) throws GameArgumentException {
         this.builder = new StringBuilder();
-//        this.tileSequence = new ArrayList<>();
         this.allTiles = new ArrayList<>(List.of(Tile.values()));
+        this.removeTileFromList(buffer);
         this.cubeState = cubeState;
         this.memoryHelper = memoryHelper;
         this.currentTile = buffer;
@@ -106,27 +105,53 @@ public class GenerateTranslation {
             Tile location = this.currentTile.getLocation(this.cubeState);
 
             tileSequence.addLast(location);
-            this.allTiles.remove(location);
+            this.removeTileFromList(location);
             this.currentTile = location;
         }
 
         while (!allTiles.isEmpty()) {
             this.setNewBuffer();
-            Tile location = this.currentTile.getLocation(this.cubeState);
-            if (location.equals(this.currentTile)) {
+            if (!isNewBufferValid()) {
                 continue;
             }
             tileSequence.addLast(currentTile);
 
+            Tile location;
             do {
                 location = this.currentTile.getLocation(this.cubeState);
 
                 tileSequence.addLast(location);
-                this.allTiles.remove(location);
+                this.removeTileFromList(location);
                 this.currentTile = location;
             } while (!this.isCurrentBufferReached());
         }
         return tileSequence;
+    }
+
+    private void removeTileFromList(Tile tile) {
+        CornerPiece bufferCorner = CornerPiece.getPieceFromTile(tile);
+        EdgePiece bufferEdge = EdgePiece.getPieceFromTile(tile);
+
+        if (bufferCorner != null) {
+            this.allTiles.remove(bufferCorner.getFirstTile());
+            this.allTiles.remove(bufferCorner.getSecondTile());
+            this.allTiles.remove(bufferCorner.getThirdTile());
+        }
+        if (bufferEdge != null) {
+            this.allTiles.remove(bufferEdge.getFirstTile());
+            this.allTiles.remove(bufferEdge.getSecondTile());
+        }
+    }
+
+    private boolean isNewBufferValid() {
+        Tile location = this.currentTile.getLocation(this.cubeState);
+        if (location.equals(this.currentTile)) {
+            return false;
+        }
+        boolean isBufferUppercase = Character.isUpperCase(buffer.toString().charAt(0));
+        boolean isCurrentTileUppercase = Character.isUpperCase(currentTile.toString().charAt(0));
+
+        return isBufferUppercase && isCurrentTileUppercase || !isBufferUppercase && !isCurrentTileUppercase;
     }
 
     private void setNewBuffer() {

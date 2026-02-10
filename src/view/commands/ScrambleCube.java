@@ -1,7 +1,7 @@
 package view.commands;
 
 import model.CubeManager;
-import model.CubeState;
+
 import model.GameArgumentException;
 import view.MovesParser;
 import view.Result;
@@ -26,10 +26,10 @@ public class ScrambleCube extends Command {
         }
 
         List<MovesParser.AllMoves> allMoves = MovesParser.getMovesFromScramble(arguments);
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         for (MovesParser.AllMoves move : allMoves) {
-            sb.append(move.name());
-            sb.append(" ");
+            stringBuilder.append(move.name());
+            stringBuilder.append(" ");
         }
 
         try {
@@ -38,7 +38,7 @@ public class ScrambleCube extends Command {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok(sb.toString(), new CubeState(cubeManager.getCube()));
+        return Result.ok(stringBuilder.toString(), this.getCurrentCubeState());
     }
 
 }

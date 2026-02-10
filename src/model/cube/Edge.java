@@ -34,6 +34,26 @@ public class Edge extends Piece {
         this.currentLocation = edge.currentLocation;
     }
 
+    public void swapTileLocations(Tile key) {
+        Tile location = this.currentTileLocation.get(key);
+        switch (location) {
+            case a:
+                this.currentTileLocation.put(key, Tile.d);
+                break;
+            case d:
+                this.currentTileLocation.put(key, Tile.a);
+                break;
+            case q:
+                this.currentTileLocation.put(key, Tile.e);
+                break;
+            case e:
+                this.currentTileLocation.put(key, Tile.q);
+                break;
+            default:
+                break;
+        }
+    }
+
     public void turnLeft(Piece piece) {
         this.swap((Edge) piece);
         Tile nextFirstTile = this.edge.getFirstTile().getLeft();
@@ -41,7 +61,6 @@ public class Edge extends Piece {
         this.currentTileLocation.put(this.edge.getFirstTile(), piece.getCurrentTileLocation(nextFirstTile));
         this.currentTileLocation.put(this.edge.getSecondTile(), piece.getCurrentTileLocation(nextSecondTile));
     }
-
 
     public void turnRight(Piece piece) {
         this.swap((Edge) piece);

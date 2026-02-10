@@ -42,5 +42,4 @@ public class MemoryWordTable {
             throw new GameArgumentException(e.getMessage());
         }
     }
-
 }

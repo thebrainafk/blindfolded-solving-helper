@@ -1,6 +1,7 @@
 package view.commands;
 
 import model.CubeManager;
+import model.CubeState;
 import model.GameArgumentException;
 import view.Result;
 
@@ -14,15 +15,16 @@ public class GenerateEdgesM2 extends Command {
 
     @Override
     public Result execute(String arguments) {
+        CubeState cubeState = this.getCurrentCubeState();
         String translation;
 
         try {
-            translation = this.cubeManager.generateEdgesM2(this.cubeState);
+            translation = this.cubeManager.generateEdgesM2(cubeState);
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
 
-        return Result.ok(translation, this.cubeState);
+        return Result.ok(translation, this.getCurrentCubeState());
     }
 
 }
