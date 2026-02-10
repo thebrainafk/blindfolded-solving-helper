@@ -24,7 +24,7 @@ public class GenerateEdgesM2 extends Command {
             return Result.error(error.getMessage());
         }
 
-        return Result.edge(translation, this.getCurrentCubeState());
+        return Result.edge(translation);
     }
 
 }

@@ -1,7 +1,5 @@
 package view;
 
-import model.CubeState;
-
 import java.util.Objects;
 
 public final class Result {
@@ -11,42 +9,39 @@ public final class Result {
     private final String scramble;
     private final String edgeAlgorithmOutput;
     private final String cornerAlgorithmOutput;
-    private final CubeState cubeState;
 
     private Result(
             boolean success,
             String errorMessage,
             String scramble,
             String edgeAlgorithmOutput,
-            String cornerAlgorithmOutput,
-            CubeState cubeState
+            String cornerAlgorithmOutput
     ) {
         this.success = success;
         this.errorMessage = Objects.requireNonNull(errorMessage);
         this.scramble = Objects.requireNonNull(scramble);
         this.edgeAlgorithmOutput = Objects.requireNonNull(edgeAlgorithmOutput);
         this.cornerAlgorithmOutput = Objects.requireNonNull(cornerAlgorithmOutput);
-        this.cubeState = cubeState;
     }
 
-    public static Result none(CubeState cubeState) {
-        return new Result(true, "", "", "", "", cubeState);
+    public static Result none() {
+        return new Result(true, "", "", "", "");
     }
 
-    public static Result scramble(String scramble, CubeState cubeState) {
-        return new Result(true, "", scramble, "", "", cubeState);
+    public static Result scramble(String scramble) {
+        return new Result(true, "", scramble, "", "");
     }
 
-    public static Result edge(String edgeAlgorithmOutput, CubeState cubeState) {
-        return new Result(true, "", "", edgeAlgorithmOutput, "", cubeState);
+    public static Result edge(String edgeAlgorithmOutput) {
+        return new Result(true, "", "", edgeAlgorithmOutput, "");
     }
 
-    public static Result corner(String cornerAlgorithmOutput, CubeState cubeState) {
-        return new Result(true, "", "", "", cornerAlgorithmOutput, cubeState);
+    public static Result corner(String cornerAlgorithmOutput) {
+        return new Result(true, "", "", "", cornerAlgorithmOutput);
     }
 
     public static Result error(String message) {
-        return new Result(false, message, "", "", "", null);
+        return new Result(false, message, "", "", "");
     }
 
     public boolean success() {
@@ -67,9 +62,5 @@ public final class Result {
 
     public String cornerAlgorithmOutput() {
         return cornerAlgorithmOutput;
-    }
-
-    public CubeState cubeState() {
-        return cubeState;
     }
 }

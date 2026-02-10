@@ -33,7 +33,7 @@ public class ScrambleCube extends Command {
             return Result.error(error.getMessage());
         }
 
-        return Result.scramble(arguments.trim(), this.getCurrentCubeState());
+        return Result.scramble(arguments.trim());
     }
 
 }

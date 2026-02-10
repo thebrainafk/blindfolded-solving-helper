@@ -17,7 +17,7 @@ public class ResetCube extends Command {
 
         this.cubeManager.resetCube();
 
-        return Result.none(this.getCurrentCubeState());
+        return Result.none();
     }
 
 }

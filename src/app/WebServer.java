@@ -5,7 +5,6 @@ import com.sun.net.httpserver.HttpServer;
 import model.CubeManager;
 import model.CubeState;
 import view.CubeNetRenderer;
-import view.CubeStateFormatter;
 import view.Result;
 
 import java.io.IOException;
@@ -25,14 +24,11 @@ public class WebServer {
 
     private final CommandService commandService;
     private final CubeManager cubeManager;
-    private final CubeStateFormatter cubeStateFormatter;
     private final CubeNetRenderer cubeNetRenderer;
-
 
     public WebServer(CommandService commandService, CubeManager cubeManager) {
         this.commandService = commandService;
         this.cubeManager = cubeManager;
-        this.cubeStateFormatter = new CubeStateFormatter();
         this.cubeNetRenderer = new CubeNetRenderer();
     }
 
@@ -44,6 +40,7 @@ public class WebServer {
     }
 
     private void handleIndex(HttpExchange exchange) throws IOException {
+        CubeState cubeState = new CubeState(cubeManager.getCube());
         sendHtml(exchange, renderPage(new PageModel(
                 "",
                 "",
@@ -51,8 +48,8 @@ public class WebServer {
                 DEFAULT_EDGE_ALGORITHM,
                 DEFAULT_CORNER_ALGORITHM,
                 cubeManager.isMemoryHelperEnabled(),
-                formatCubeState(new CubeState(cubeManager.getCube())),
-                cubeNetRenderer.render(new CubeState(cubeManager.getCube()))
+                cubeNetRenderer.render(cubeState),
+                ""
         )));
     }
 
@@ -83,27 +80,27 @@ public class WebServer {
                 } else {
                     errorOutput = scrambleResult.errorMessage();
                 }
-            } else if ("resetCube".equals(action)) {
+            } else if ("scrambleCube".equals(action)) {
                 Result resetResult = executeCommand("resetCube", "");
                 if (!resetResult.success()) {
                     errorOutput = resetResult.errorMessage();
-                }
-            } else if ("scrambleCube".equals(action)) {
-                Result scrambleResult = executeCommand("scrambleCube", scrambleText);
-                if (!scrambleResult.success()) {
-                    errorOutput = scrambleResult.errorMessage();
                 } else {
-                    scrambleText = scrambleResult.scramble();
-                    Result edgeResult = executeCommand(edgeAlgorithm, "");
-                    if (!edgeResult.success()) {
-                        errorOutput = edgeResult.errorMessage();
+                    Result scrambleResult = executeCommand("scrambleCube", scrambleText);
+                    if (!scrambleResult.success()) {
+                        errorOutput = scrambleResult.errorMessage();
                     } else {
-                        edgeOutput = edgeResult.edgeAlgorithmOutput();
-                        Result cornerResult = executeCommand(cornerAlgorithm, "");
-                        if (!cornerResult.success()) {
-                            errorOutput = cornerResult.errorMessage();
+                        scrambleText = scrambleResult.scramble();
+                        Result edgeResult = executeCommand(edgeAlgorithm, "");
+                        if (!edgeResult.success()) {
+                            errorOutput = edgeResult.errorMessage();
                         } else {
-                            cornerOutput = cornerResult.cornerAlgorithmOutput();
+                            edgeOutput = edgeResult.edgeAlgorithmOutput();
+                            Result cornerResult = executeCommand(cornerAlgorithm, "");
+                            if (!cornerResult.success()) {
+                                errorOutput = cornerResult.errorMessage();
+                            } else {
+                                cornerOutput = cornerResult.cornerAlgorithmOutput();
+                            }
                         }
                     }
                 }
@@ -111,18 +108,16 @@ public class WebServer {
         }
 
         CubeState cubeState = new CubeState(cubeManager.getCube());
-        PageModel pageModel = new PageModel(
+        sendHtml(exchange, renderPage(new PageModel(
                 errorOutput,
                 edgeOutput,
                 cornerOutput,
                 edgeAlgorithm,
                 cornerAlgorithm,
                 cubeManager.isMemoryHelperEnabled(),
-                formatCubeState(cubeState),
                 cubeNetRenderer.render(cubeState),
                 scrambleText
-        );
-        sendHtml(exchange, renderPage(pageModel));
+        )));
     }
 
     private Result executeCommand(String name, String args) {
@@ -164,11 +159,10 @@ public class WebServer {
                       .controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
                       label { display: block; margin-top: 0.25rem; font-weight: bold; }
                       textarea, select, button { width: 100%%; margin-top: 0.5rem; }
-                      textarea { min-height: 6rem; }
-                      .readonly { background: #f3f4f6; }
-                      .button-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+                      #scramble { min-height: 2.6rem; max-height: 14rem; resize: none; overflow-y: hidden; }
+                      .readonly { background: #f3f4f6; min-height: 9rem; }
+                      .button-row { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-top: 1rem; }
                       .switch-row { margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-                      .outputs { margin-top: 1rem; }
                       .cube-net {
                         display: grid;
                         grid-template-columns: repeat(4, auto);
@@ -228,30 +222,35 @@ public class WebServer {
                         <div style="grid-column: 1 / -1;">
                           <label for="scramble">Scramble</label>
                           <textarea id="scramble" name="scramble">%s</textarea>
+                          <button type="submit" name="action" value="generateScramble">GenerateScramble</button>
                         </div>
                       </div>
-
+                
                       <div class="panel">
                         <div class="switch-row">
                           <input id="memoryHelper" type="checkbox" name="memoryHelper" %s />
                           <label for="memoryHelper" style="margin: 0;">Memory Helper</label>
                         </div>
                         <div class="button-row">
-                          <button type="submit" name="action" value="generateScramble">GenerateScramble</button>
                           <button type="submit" name="action" value="scrambleCube">ScrambleCube + Algos</button>
-                          <button type="submit" name="action" value="resetCube">ResetCube</button>
                         </div>
                       </div>
-
-                      <div class="panel outputs">
-                        <label for="message">Output</label>
+                
+                      <div class="panel">
                         <textarea id="message" class="readonly" readonly>%s</textarea>
                         <label>Cube Snapshot</label>
                         %s
-                        <label for="cubeState">Cube State</label>
-                        <textarea id="cubeState" class="readonly" readonly>%s</textarea>
                       </div>
                     </form>
+                    <script>
+                      const scrambleInput = document.getElementById('scramble');
+                      const autoResize = () => {
+                        scrambleInput.style.height = 'auto';
+                        scrambleInput.style.height = `${scrambleInput.scrollHeight}px`;
+                      };
+                      scrambleInput.addEventListener('input', autoResize);
+                      autoResize();
+                    </script>
                   </body>
                 </html>
                 """.formatted(
@@ -260,11 +259,9 @@ public class WebServer {
                 escapeHtml(pageModel.scramble()),
                 pageModel.memoryHelperEnabled() ? "checked" : "",
                 escapeHtml(buildOutput(pageModel.errorOutput(), pageModel.edgeOutput(), pageModel.cornerOutput())),
-                pageModel.cubeNetHtml(),
-                escapeHtml(pageModel.cubeStateText())
+                pageModel.cubeNetHtml()
         );
     }
-
 
     private String buildOutput(String errorOutput, String edgeOutput, String cornerOutput) {
         if (!errorOutput.isBlank()) {
@@ -276,13 +273,13 @@ public class WebServer {
         if (trimmedEdge.isBlank() && trimmedCorner.isBlank()) {
             return "";
         }
-        return trimmedEdge + "\n" + trimmedCorner;
+
+        return "Edge Pairs\n" + trimmedEdge + "\n\nCorner Pairs\n" + trimmedCorner;
     }
+
     private String buildEdgeAlgorithmOptions(String selectedEdgeAlgorithm) {
-        StringBuilder options = new StringBuilder();
-        options.append(buildOption("generateEdgesM2", selectedEdgeAlgorithm, "generateEdgesM2"));
-        options.append(buildOption("generateEdgesPochmann", selectedEdgeAlgorithm, "generateEdgesPochmann"));
-        return options.toString();
+        return buildOption("generateEdgesM2", selectedEdgeAlgorithm, "generateEdgesM2") +
+                buildOption("generateEdgesPochmann", selectedEdgeAlgorithm, "generateEdgesPochmann");
     }
 
     private String buildCornerAlgorithmOptions(String selectedCornerAlgorithm) {
@@ -301,13 +298,6 @@ public class WebServer {
                 .append(label)
                 .append("</option>");
         return option.toString();
-    }
-
-    private String formatCubeState(CubeState cubeState) {
-        if (cubeState == null) {
-            return "";
-        }
-        return cubeStateFormatter.format(cubeState);
     }
 
     private static String escapeHtml(String value) {
@@ -336,21 +326,8 @@ public class WebServer {
             String edgeAlgorithm,
             String cornerAlgorithm,
             boolean memoryHelperEnabled,
-            String cubeStateText,
             String cubeNetHtml,
             String scramble
     ) {
-        private PageModel(
-                String errorOutput,
-                String edgeOutput,
-                String cornerOutput,
-                String edgeAlgorithm,
-                String cornerAlgorithm,
-                boolean memoryHelperEnabled,
-                String cubeStateText,
-                String cubeNetHtml
-        ) {
-            this(errorOutput, edgeOutput, cornerOutput, edgeAlgorithm, cornerAlgorithm, memoryHelperEnabled, cubeStateText, cubeNetHtml, "");
-        }
     }
 }
