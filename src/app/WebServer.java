@@ -45,6 +45,8 @@ public class WebServer {
                 "",
                 "",
                 "",
+                "",
+                "",
                 DEFAULT_EDGE_ALGORITHM,
                 DEFAULT_CORNER_ALGORITHM,
                 cubeManager.isMemoryHelperEnabled(),
@@ -64,6 +66,8 @@ public class WebServer {
         String errorOutput = "";
         String edgeOutput = "";
         String cornerOutput = "";
+        String edgeSetupMovesOutput = "";
+        String cornerSetupMovesOutput = "";
 
         if (cubeManager.isMemoryHelperEnabled() != memoryHelperEnabledInForm) {
             Result toggleResult = executeCommand("toggleMemoryHelper", "");
@@ -95,11 +99,13 @@ public class WebServer {
                             errorOutput = edgeResult.errorMessage();
                         } else {
                             edgeOutput = edgeResult.edgeAlgorithmOutput();
+                            edgeSetupMovesOutput = edgeResult.edgeSetupMovesOutput();
                             Result cornerResult = executeCommand(cornerAlgorithm, "");
                             if (!cornerResult.success()) {
                                 errorOutput = cornerResult.errorMessage();
                             } else {
                                 cornerOutput = cornerResult.cornerAlgorithmOutput();
+                                cornerSetupMovesOutput = cornerResult.cornerSetupMovesOutput();
                             }
                         }
                     }
@@ -112,6 +118,8 @@ public class WebServer {
                 errorOutput,
                 edgeOutput,
                 cornerOutput,
+                edgeSetupMovesOutput,
+                cornerSetupMovesOutput,
                 edgeAlgorithm,
                 cornerAlgorithm,
                 cubeManager.isMemoryHelperEnabled(),
@@ -160,7 +168,7 @@ public class WebServer {
                       label { display: block; margin-top: 0.25rem; font-weight: bold; }
                       textarea, select, button { width: 100%%; margin-top: 0.5rem; }
                       #scramble { min-height: 2.6rem; max-height: 14rem; resize: none; overflow-y: hidden; }
-                      .readonly { background: #f3f4f6; min-height: 9rem; }
+                      .readonly { background: #f3f4f6; min-height: 6rem; }
                       .button-row { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-top: 1rem; }
                       .switch-row { margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; }
                       .cube-net {
@@ -237,7 +245,12 @@ public class WebServer {
                       </div>
                 
                       <div class="panel">
+                        <label>Letter sequence</label>
                         <textarea id="message" class="readonly" readonly>%s</textarea>
+                        <label>Setup-Moves Edges</label>
+                        <textarea id="edge-setup-moves" class="readonly" readonly>%s</textarea>
+                        <label>Setup-Moves Corners</label>
+                        <textarea id="corner-setup-moves" class="readonly" readonly>%s</textarea>
                         <label>Cube Snapshot</label>
                         %s
                       </div>
@@ -259,8 +272,17 @@ public class WebServer {
                 escapeHtml(pageModel.scramble()),
                 pageModel.memoryHelperEnabled() ? "checked" : "",
                 escapeHtml(buildOutput(pageModel.errorOutput(), pageModel.edgeOutput(), pageModel.cornerOutput())),
+                escapeHtml(buildSetupOutput(pageModel.errorOutput(), pageModel.edgeSetupMovesOutput())),
+                escapeHtml(buildSetupOutput(pageModel.errorOutput(), pageModel.cornerSetupMovesOutput())),
                 pageModel.cubeNetHtml()
         );
+    }
+
+    private String buildSetupOutput(String errorOutput, String setupMovesOutput) {
+        if (!errorOutput.isBlank()) {
+            return "ERROR: " + errorOutput;
+        }
+        return setupMovesOutput.trim();
     }
 
     private String buildOutput(String errorOutput, String edgeOutput, String cornerOutput) {
@@ -323,6 +345,8 @@ public class WebServer {
             String errorOutput,
             String edgeOutput,
             String cornerOutput,
+            String edgeSetupMovesOutput,
+            String cornerSetupMovesOutput,
             String edgeAlgorithm,
             String cornerAlgorithm,
             boolean memoryHelperEnabled,
