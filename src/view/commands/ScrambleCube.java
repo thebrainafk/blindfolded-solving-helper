@@ -23,9 +23,6 @@ public class ScrambleCube extends Command {
     }
 
     @Override
-    /**
-     * Executes execute.
-     */
     public Result execute(String arguments) {
         if (arguments.isEmpty()) {
             return Result.error("no scramble given");

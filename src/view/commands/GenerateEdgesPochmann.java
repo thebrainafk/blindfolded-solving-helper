@@ -26,9 +26,6 @@ public class GenerateEdgesPochmann extends Command {
     }
 
     @Override
-    /**
-     * Executes execute.
-     */
     public Result execute(String arguments) {
         CubeState cubeState = this.getCurrentCubeState();
         String translation;

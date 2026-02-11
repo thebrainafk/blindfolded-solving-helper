@@ -8,9 +8,6 @@ import java.util.Objects;
 
 /**
  * asdf.
- *
- * @author Programmieren-Team
- * @author uckhu
  */
 public abstract class Command {
     protected final String commandName;

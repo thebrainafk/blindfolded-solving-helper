@@ -5,9 +5,7 @@ import model.GameArgumentException;
 import view.Result;
 
 /**
- * asdf.
- *
- * @author uckhu
+ * Represents the GenerateScramble class.
  */
 public class GenerateScramble extends Command {
 
@@ -21,9 +19,6 @@ public class GenerateScramble extends Command {
     }
 
     @Override
-    /**
-     * Executes execute.
-     */
     public Result execute(String arguments) {
         String scramble;
 

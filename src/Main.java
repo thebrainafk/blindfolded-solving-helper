@@ -5,11 +5,6 @@ import app.WebServer;
 import model.CubeManager;
 import view.Result;
 
-/**
- * asdf.
- *
- * @author uckhu
- */
 public final class Main {
 
     private Main() {

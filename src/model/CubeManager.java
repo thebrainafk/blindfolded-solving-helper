@@ -12,9 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * asdf.
- *
- * @author uckhu
+ * Manages the Cube by executing commands.
  */
 public class CubeManager {
     private Cube cube;

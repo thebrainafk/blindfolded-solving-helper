@@ -18,9 +18,6 @@ public class ToggleMemoryHelper extends Command {
     }
 
     @Override
-    /**
-     * Executes execute.
-     */
     public Result execute(String arguments) {
 
         this.cubeManager.toggleMemoryHelper();

@@ -27,9 +27,6 @@ public class GenerateEdgesM2 extends Command {
     }
 
     @Override
-    /**
-     * Executes execute.
-     */
     public Result execute(String arguments) {
         CubeState cubeState = this.getCurrentCubeState();
         String translation;

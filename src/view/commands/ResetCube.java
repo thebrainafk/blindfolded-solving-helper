@@ -19,9 +19,6 @@ public class ResetCube extends Command {
     }
 
     @Override
-    /**
-     * Executes execute.
-     */
     public Result execute(String arguments) {
 
         this.cubeManager.resetCube();
