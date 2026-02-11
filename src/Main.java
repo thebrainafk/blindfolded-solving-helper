@@ -20,10 +20,11 @@ public final class Main {
         CommandRegistry registry = new CommandRegistry(cubeManager);
         CommandService service = new CommandService(registry);
 
+        int port = resolvePort();
         WebServer webServer = new WebServer(service, cubeManager);
         try {
-            webServer.start(8080);
-            System.out.println("Web server running at http://localhost:8080");
+            webServer.start(port);
+            System.out.printf("Web server running at http://localhost:%d%n", port);
         } catch (Exception error) {
             System.out.printf("ERROR: %s%n", error.getMessage());
         }
@@ -32,6 +33,19 @@ public final class Main {
             System.out.println("Command executed successfully.");
         } else {
             System.out.printf("ERROR: %s%n", result.errorMessage());
+        }
+    }
+
+    private static int resolvePort() {
+        String rawPort = System.getenv("PORT");
+        if (rawPort == null || rawPort.isBlank()) {
+            return 8080;
+        }
+
+        try {
+            return Integer.parseInt(rawPort.trim());
+        } catch (NumberFormatException error) {
+            return 8080;
         }
     }
 }
