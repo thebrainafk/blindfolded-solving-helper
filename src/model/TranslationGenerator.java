@@ -8,11 +8,10 @@ import resources.MemoryWordTable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class GenerateTranslation {
+public class TranslationGenerator {
 
     private final StringBuilder builder;
     private final List<Tile> allTiles;
@@ -24,15 +23,11 @@ public class GenerateTranslation {
     private Tile currentTile;
     private Tile currentBuffer;
 
-    public GenerateTranslation(CubeState cubeState, boolean memoryHelper, Tile buffer) throws GameArgumentException {
-        this(cubeState, memoryHelper, buffer, null);
-    }
-
-    public GenerateTranslation(CubeState cubeState, boolean memoryHelper, Tile buffer,
-                               Comparator<Tile> bufferComparator) throws GameArgumentException {
+    public TranslationGenerator(CubeState cubeState, boolean memoryHelper, Tile buffer,
+                                Comparator<Tile> bufferComparator) throws GameArgumentException {
         this.builder = new StringBuilder();
         this.allTiles = new ArrayList<>(List.of(Tile.values()));
-        this.removeTileFromList(buffer);
+        this.removePieceFromList(buffer);
         this.cubeState = cubeState;
         this.memoryHelper = memoryHelper;
         this.bufferComparator = bufferComparator;
@@ -113,7 +108,7 @@ public class GenerateTranslation {
             Tile location = this.currentTile.getLocation(this.cubeState);
 
             tileSequence.addLast(location);
-            this.removeTileFromList(location);
+            this.removePieceFromList(location);
             this.currentTile = location;
         }
 
@@ -129,14 +124,14 @@ public class GenerateTranslation {
                 location = this.currentTile.getLocation(this.cubeState);
 
                 tileSequence.addLast(location);
-                this.removeTileFromList(location);
+                this.removePieceFromList(location);
                 this.currentTile = location;
             } while (!this.isCurrentBufferReached());
         }
         return tileSequence;
     }
 
-    private void removeTileFromList(Tile tile) {
+    private void removePieceFromList(Tile tile) {
         CornerPiece bufferCorner = CornerPiece.getPieceFromTile(tile);
         EdgePiece bufferEdge = EdgePiece.getPieceFromTile(tile);
 
@@ -163,11 +158,8 @@ public class GenerateTranslation {
     }
 
     private void setNewBuffer() {
-        if (this.bufferComparator != null) {
-            this.allTiles.sort(this.bufferComparator);
-        } else {
-            Collections.shuffle(this.allTiles);
-        }
+        this.allTiles.sort(this.bufferComparator);
+
         this.currentBuffer = this.allTiles.removeFirst();
         this.currentTile = currentBuffer;
     }

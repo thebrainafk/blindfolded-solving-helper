@@ -3,7 +3,12 @@ package view.commands;
 import model.CubeManager;
 import model.CubeState;
 import model.GameArgumentException;
+import model.TranslationGenerator;
+import model.cube.Tile;
+import resources.TileOrderComparatorFactory;
 import view.Result;
+
+import java.util.List;
 
 public class GenerateEdgesPochmann extends Command {
 
@@ -19,7 +24,10 @@ public class GenerateEdgesPochmann extends Command {
         String translation;
 
         try {
-            translation = this.cubeManager.generateEdgesPochmann(cubeState);
+            TranslationGenerator translationGenerator = new TranslationGenerator(cubeState, cubeManager.isMemoryHelperEnabled(), Tile.b,
+                    TileOrderComparatorFactory.fromResource("resources/edges_pochmann_tile_order.txt"));
+            List<Tile> tileSequence = translationGenerator.generateTileSequence();
+            translation = translationGenerator.translatePochmann(tileSequence);
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }

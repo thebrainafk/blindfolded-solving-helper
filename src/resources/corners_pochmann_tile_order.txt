@@ -1,25 +1,9 @@
-# Reihenfolge für neue Corner-Buffers im Command generateCornersPochmann.
-# Eine Tile pro Zeile. Nicht aufgelistete Tiles kommen danach alphabetisch.
-A
-B
-C
-D
-F
-G
-H
-I
-J
-K
-L
-M
-N
-O
-P
-Q
-R
-S
-T
-U
+# Order for new corner buffers in the generateCornersPochmann command.
+# One tile per row. Tiles not listed are added alphabetically afterward.
 V
+U
 W
 X
+M
+D
+N

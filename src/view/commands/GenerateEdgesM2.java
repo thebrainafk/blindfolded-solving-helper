@@ -3,7 +3,12 @@ package view.commands;
 import model.CubeManager;
 import model.CubeState;
 import model.GameArgumentException;
+import model.TranslationGenerator;
+import model.cube.Tile;
+import resources.TileOrderComparatorFactory;
 import view.Result;
+
+import java.util.List;
 
 public class GenerateEdgesM2 extends Command {
 
@@ -19,7 +24,10 @@ public class GenerateEdgesM2 extends Command {
         String translation;
 
         try {
-            translation = this.cubeManager.generateEdgesM2(cubeState);
+            TranslationGenerator translationGenerator = new TranslationGenerator(cubeState, cubeManager.isMemoryHelperEnabled(), Tile.u,
+                    TileOrderComparatorFactory.fromResource("resources/edges_M2_tile_order.txt"));
+            List<Tile> M2TileSequence = this.cubeManager.generateEdgesM2TileSequence(cubeState, translationGenerator);
+            translation = translationGenerator.translateEdgesM2(M2TileSequence);
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }

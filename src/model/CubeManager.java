@@ -33,19 +33,9 @@ public class CubeManager {
         return this.cube;
     }
 
-    public String generateCornersPochmann(CubeState cubeState) throws GameArgumentException {
-        GenerateTranslation generateTranslation = new GenerateTranslation(
-                cubeState,
-                memoryHelper,
-                Tile.E,
-                TileOrderComparatorFactory.fromResource("resources/corners_pochmann_tile_order.txt")
-        );
-        List<Tile> tileSequence = generateTranslation.generateTileSequence();
-        return generateTranslation.translatePochmann(tileSequence);
-    }
-
-    public String generateEdgesM2(CubeState cubeState) throws GameArgumentException {
-        GenerateTranslation cornerTranslator = new GenerateTranslation(cubeState, memoryHelper, Tile.E);
+    public List<Tile> generateEdgesM2TileSequence(CubeState cubeState, TranslationGenerator translationGenerator) throws GameArgumentException {
+        TranslationGenerator cornerTranslator = new TranslationGenerator(cubeState, memoryHelper, Tile.E,
+                TileOrderComparatorFactory.fromResource("resources/corners_pochmann_tile_order.txt"));
         List<Tile> CornerTileSequence = cornerTranslator.generateTileSequence();
 
         if (CornerTileSequence.size() % 2 == 1) {
@@ -62,16 +52,7 @@ public class CubeManager {
             }
         }
 
-        GenerateTranslation generateTranslation = new GenerateTranslation(cubeState, memoryHelper, Tile.u);
-        List<Tile> M2TileSequence = generateTranslation.generateTileSequence();
-
-        return generateTranslation.translateEdgesM2(M2TileSequence);
-    }
-
-    public String generateEdgesPochmann(CubeState cubeState) throws GameArgumentException {
-        GenerateTranslation generateTranslation = new GenerateTranslation(cubeState, memoryHelper, Tile.b);
-        List<Tile> tileSequence = generateTranslation.generateTileSequence();
-        return generateTranslation.translatePochmann(tileSequence);
+        return translationGenerator.generateTileSequence();
     }
 
     public String generateScramble() throws GameArgumentException {
