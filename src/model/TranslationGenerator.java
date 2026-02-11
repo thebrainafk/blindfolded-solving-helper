@@ -54,27 +54,7 @@ public class TranslationGenerator {
 
     }
 
-    public String translateEdgesM2(List<Tile> tileSequence) {
-        for (int i = 0; i < tileSequence.size(); i = i + 2) {
-            Tile firstTile = tileSequence.get(i);
-            if (i + 1 < tileSequence.size()) {
-                Tile secondTile = tileSequence.get(i + 1);
-
-                Tile opposite = secondTile.getOppositeTile();
-                if (opposite != null) {
-                    secondTile = opposite;
-                }
-
-                this.appendTileString(firstTile, secondTile);
-            } else {
-                builder.append(firstTile);
-            }
-            builder.append(" ");
-        }
-        return builder.toString();
-    }
-
-    public String translatePochmann(List<Tile> tileSequence) {
+    public String translateTilePairs(List<Tile> tileSequence) {
         for (int i = 0; i < tileSequence.size(); i = i + 2) {
             Tile firstTile = tileSequence.get(i);
             if (i + 1 < tileSequence.size()) {

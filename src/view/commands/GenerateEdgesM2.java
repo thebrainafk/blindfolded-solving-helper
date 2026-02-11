@@ -9,6 +9,7 @@ import model.cube.Tile;
 import resources.TileOrderComparatorFactory;
 import view.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GenerateEdgesM2 extends Command {
@@ -29,9 +30,10 @@ public class GenerateEdgesM2 extends Command {
             TranslationGenerator translationGenerator = new TranslationGenerator(cubeState, cubeManager.isMemoryHelperEnabled(), Tile.u,
                     TileOrderComparatorFactory.fromResource("resources/edges_M2_tile_order.txt"));
             List<Tile> M2TileSequence = this.cubeManager.generateEdgesM2TileSequence(cubeState, translationGenerator);
-            translation = translationGenerator.translateEdgesM2(M2TileSequence);
+            List<Tile> transformedTileSequence = this.applyOppositeTileRule(M2TileSequence);
+            translation = translationGenerator.translateTilePairs(transformedTileSequence);
             SetupMoveGenerator setupMoveGenerator = new SetupMoveGenerator("resources/edges_M2_setup_moves.txt");
-            setupMoves = setupMoveGenerator.generateFromTileSequence(M2TileSequence);
+            setupMoves = setupMoveGenerator.generateFromTileSequence(transformedTileSequence);
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
@@ -39,4 +41,14 @@ public class GenerateEdgesM2 extends Command {
         return Result.edge(translation, setupMoves);
     }
 
+    private List<Tile> applyOppositeTileRule(List<Tile> tileSequence) {
+        List<Tile> transformedTileSequence = new ArrayList<>(tileSequence);
+        for (int i = 1; i < transformedTileSequence.size(); i = i + 2) {
+            Tile opposite = transformedTileSequence.get(i).getOppositeTile();
+            if (opposite != null) {
+                transformedTileSequence.set(i, opposite);
+            }
+        }
+        return transformedTileSequence;
+    }
 }

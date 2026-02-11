@@ -29,7 +29,7 @@ public class GenerateCornersPochmann extends Command {
             TranslationGenerator translationGenerator = new TranslationGenerator(cubeState, cubeManager.isMemoryHelperEnabled(), Tile.E,
                     TileOrderComparatorFactory.fromResource("resources/corners_pochmann_tile_order.txt"));
             List<Tile> tileSequence = translationGenerator.generateTileSequence();
-            translation = translationGenerator.translatePochmann(tileSequence);
+            translation = translationGenerator.translateTilePairs(tileSequence);
             SetupMoveGenerator setupMoveGenerator = new SetupMoveGenerator("resources/corners_pochmann_setup_moves.txt");
             setupMoves = setupMoveGenerator.generateFromTileSequence(tileSequence);
         } catch (GameArgumentException error) {

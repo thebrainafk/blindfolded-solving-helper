@@ -28,9 +28,10 @@ public class SetupMoveGenerator {
             } else {
                 setupMovesBuilder.append(mappedMoves);
             }
-            setupMovesBuilder.append(" ");
+            setupMovesBuilder.append(System.lineSeparator());
         }
-        return setupMovesBuilder.toString().trim();
+        setupMovesBuilder.setLength(setupMovesBuilder.length() - System.lineSeparator().length());
+        return setupMovesBuilder.toString();
     }
 
     private Map<Tile, String> loadSetupMoves(String resourcePath) throws GameArgumentException {
