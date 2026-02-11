@@ -103,6 +103,16 @@ select {
   min-height: 7rem;
 }
 
+.pair-output {
+  min-height: 4.25rem;
+}
+
+.auto-grow-output {
+  min-height: 7rem;
+  resize: none;
+  overflow-y: hidden;
+}
+
 .actions-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -50,31 +50,35 @@
         <section class="results-grid">
           <article class="panel result-column">
             <label for="edge-pairs">Edge Pairs</label>
-            <textarea id="edge-pairs" class="readonly" readonly>%s</textarea>
+            <textarea id="edge-pairs" class="readonly pair-output" readonly>%s</textarea>
 
             <label for="edge-setup-moves">Setup-Moves Edges</label>
-            <textarea id="edge-setup-moves" class="readonly" readonly>%s</textarea>
+            <textarea id="edge-setup-moves" class="readonly auto-grow-output" readonly>%s</textarea>
           </article>
 
           <article class="panel result-column">
             <label for="corner-pairs">Corner Pairs</label>
-            <textarea id="corner-pairs" class="readonly" readonly>%s</textarea>
+            <textarea id="corner-pairs" class="readonly pair-output" readonly>%s</textarea>
 
             <label for="corner-setup-moves">Setup-Moves Corners</label>
-            <textarea id="corner-setup-moves" class="readonly" readonly>%s</textarea>
+            <textarea id="corner-setup-moves" class="readonly auto-grow-output" readonly>%s</textarea>
           </article>
         </section>
       </form>
     </main>
 
     <script>
-      const scrambleInput = document.getElementById('scramble');
-      const autoResize = () => {
-        scrambleInput.style.height = 'auto';
-        scrambleInput.style.height = `${scrambleInput.scrollHeight}px`;
+      const autoResizeTextarea = (textarea) => {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
       };
-      scrambleInput.addEventListener('input', autoResize);
-      autoResize();
+
+      const scrambleInput = document.getElementById('scramble');
+      scrambleInput.addEventListener('input', () => autoResizeTextarea(scrambleInput));
+      autoResizeTextarea(scrambleInput);
+
+      const setupMoveOutputs = document.querySelectorAll('.auto-grow-output');
+      setupMoveOutputs.forEach((textarea) => autoResizeTextarea(textarea));
     </script>
   </body>
 </html>
