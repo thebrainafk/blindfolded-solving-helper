@@ -12,6 +12,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,8 @@ import java.util.Map;
 public class WebServer {
     private static final String DEFAULT_EDGE_ALGORITHM = "generateEdgesM2";
     private static final String DEFAULT_CORNER_ALGORITHM = "generateCornersPochmann";
+    private static final Path HTML_TEMPLATE_PATH = Path.of("src", "web", "index.html");
+    private static final Path CSS_TEMPLATE_PATH = Path.of("src", "web", "styles.css");
 
     private final CommandService commandService;
     private final CubeManager cubeManager;
@@ -36,6 +40,7 @@ public class WebServer {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", this::handleIndex);
         server.createContext("/execute", this::handleExecute);
+        server.createContext("/styles.css", this::handleStyles);
         server.start();
     }
 
@@ -53,6 +58,15 @@ public class WebServer {
                 cubeNetRenderer.render(cubeState),
                 ""
         )));
+    }
+
+
+    private void handleStyles(HttpExchange exchange) throws IOException {
+        if (!"GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+            sendNotFound(exchange);
+            return;
+        }
+        sendCss(exchange, readTemplate(CSS_TEMPLATE_PATH));
     }
 
     private void handleExecute(HttpExchange exchange) throws IOException {
@@ -150,132 +164,25 @@ public class WebServer {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 
-    private String renderPage(PageModel pageModel) {
+    private String renderPage(PageModel pageModel) throws IOException {
         String edgeAlgorithmOptions = buildEdgeAlgorithmOptions(pageModel.edgeAlgorithm());
         String cornerAlgorithmOptions = buildCornerAlgorithmOptions(pageModel.cornerAlgorithm());
 
-        return """
-                <!doctype html>
-                <html lang="de">
-                  <head>
-                    <meta charset="utf-8" />
-                    <title>Blindfolded Solution Generator</title>
-                    <style>
-                      body { font-family: Arial, sans-serif; margin: 2rem; background: #f8fafc; color: #111827; }
-                      h1 { margin-bottom: 1.5rem; }
-                      .panel { background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
-                      .controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-                      label { display: block; margin-top: 0.25rem; font-weight: bold; }
-                      textarea, select, button { width: 100%%; margin-top: 0.5rem; }
-                      #scramble { min-height: 2.6rem; max-height: 14rem; resize: none; overflow-y: hidden; }
-                      .readonly { background: #f3f4f6; min-height: 6rem; }
-                      .button-row { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-top: 1rem; }
-                      .switch-row { margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-                      .cube-net {
-                        display: grid;
-                        grid-template-columns: repeat(4, auto);
-                        grid-template-rows: repeat(3, auto);
-                        gap: 12px;
-                        margin-top: 1rem;
-                      }
-                      .face {
-                        display: grid;
-                        grid-template-columns: repeat(3, 24px);
-                        grid-template-rows: repeat(3, 24px);
-                        gap: 2px;
-                        padding: 6px;
-                        background: #f2f2f2;
-                        border-radius: 6px;
-                        border: 1px solid #ddd;
-                      }
-                      .sticker {
-                        width: 24px;
-                        height: 24px;
-                        border: 1px solid #444;
-                        box-sizing: border-box;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                      }
-                      .sticker-label {
-                        font-size: 10px;
-                        font-weight: bold;
-                        color: #111;
-                        text-shadow: 0 0 2px rgba(255, 255, 255, 0.6);
-                      }
-                      .face-up { grid-column: 2; grid-row: 1; }
-                      .face-left { grid-column: 1; grid-row: 2; }
-                      .face-front { grid-column: 2; grid-row: 2; }
-                      .face-right { grid-column: 3; grid-row: 2; }
-                      .face-back { grid-column: 4; grid-row: 2; }
-                      .face-down { grid-column: 2; grid-row: 3; }
-                    </style>
-                  </head>
-                  <body>
-                    <h1>Blindfolded Trainer Dashboard</h1>
-                    <form action="/execute" method="get">
-                      <div class="panel controls">
-                        <div>
-                          <label for="edgeAlgorithm">Edge Algorithmus</label>
-                          <select id="edgeAlgorithm" name="edgeAlgorithm">
-                %s
-                          </select>
-                        </div>
-                        <div>
-                          <label for="cornerAlgorithm">Corner Algorithmus</label>
-                          <select id="cornerAlgorithm" name="cornerAlgorithm">
-                %s
-                          </select>
-                        </div>
-                        <div style="grid-column: 1 / -1;">
-                          <label for="scramble">Scramble</label>
-                          <textarea id="scramble" name="scramble">%s</textarea>
-                          <button type="submit" name="action" value="generateScramble">GenerateScramble</button>
-                        </div>
-                      </div>
-                
-                      <div class="panel">
-                        <div class="switch-row">
-                          <input id="memoryHelper" type="checkbox" name="memoryHelper" %s />
-                          <label for="memoryHelper" style="margin: 0;">Memory Helper</label>
-                        </div>
-                        <div class="button-row">
-                          <button type="submit" name="action" value="scrambleCube">ScrambleCube + Algos</button>
-                        </div>
-                      </div>
-                
-                      <div class="panel">
-                        <label>Letter sequence</label>
-                        <textarea id="message" class="readonly" readonly>%s</textarea>
-                        <label>Setup-Moves Edges</label>
-                        <textarea id="edge-setup-moves" class="readonly" readonly>%s</textarea>
-                        <label>Setup-Moves Corners</label>
-                        <textarea id="corner-setup-moves" class="readonly" readonly>%s</textarea>
-                        <label>Cube Snapshot</label>
-                        %s
-                      </div>
-                    </form>
-                    <script>
-                      const scrambleInput = document.getElementById('scramble');
-                      const autoResize = () => {
-                        scrambleInput.style.height = 'auto';
-                        scrambleInput.style.height = `${scrambleInput.scrollHeight}px`;
-                      };
-                      scrambleInput.addEventListener('input', autoResize);
-                      autoResize();
-                    </script>
-                  </body>
-                </html>
-                """.formatted(
+        return readTemplate(HTML_TEMPLATE_PATH).formatted(
+                pageModel.cubeNetHtml(),
                 edgeAlgorithmOptions,
                 cornerAlgorithmOptions,
                 escapeHtml(pageModel.scramble()),
                 pageModel.memoryHelperEnabled() ? "checked" : "",
-                escapeHtml(buildOutput(pageModel.errorOutput(), pageModel.edgeOutput(), pageModel.cornerOutput())),
+                escapeHtml(buildEdgePairsOutput(pageModel.errorOutput(), pageModel.edgeOutput())),
                 escapeHtml(buildSetupOutput(pageModel.errorOutput(), pageModel.edgeSetupMovesOutput())),
-                escapeHtml(buildSetupOutput(pageModel.errorOutput(), pageModel.cornerSetupMovesOutput())),
-                pageModel.cubeNetHtml()
+                escapeHtml(buildCornerPairsOutput(pageModel.errorOutput(), pageModel.cornerOutput())),
+                escapeHtml(buildSetupOutput(pageModel.errorOutput(), pageModel.cornerSetupMovesOutput()))
         );
+    }
+
+    private static String readTemplate(Path templatePath) throws IOException {
+        return Files.readString(templatePath, StandardCharsets.UTF_8);
     }
 
     private String buildSetupOutput(String errorOutput, String setupMovesOutput) {
@@ -285,27 +192,27 @@ public class WebServer {
         return setupMovesOutput.trim();
     }
 
-    private String buildOutput(String errorOutput, String edgeOutput, String cornerOutput) {
+    private String buildEdgePairsOutput(String errorOutput, String edgeOutput) {
         if (!errorOutput.isBlank()) {
             return "ERROR: " + errorOutput;
         }
+        return edgeOutput.trim();
+    }
 
-        String trimmedEdge = edgeOutput.trim();
-        String trimmedCorner = cornerOutput.trim();
-        if (trimmedEdge.isBlank() && trimmedCorner.isBlank()) {
-            return "";
+    private String buildCornerPairsOutput(String errorOutput, String cornerOutput) {
+        if (!errorOutput.isBlank()) {
+            return "ERROR: " + errorOutput;
         }
-
-        return "Edge Pairs\n" + trimmedEdge + "\n\nCorner Pairs\n" + trimmedCorner;
+        return cornerOutput.trim();
     }
 
     private String buildEdgeAlgorithmOptions(String selectedEdgeAlgorithm) {
-        return buildOption("generateEdgesM2", selectedEdgeAlgorithm, "generateEdgesM2") +
-                buildOption("generateEdgesPochmann", selectedEdgeAlgorithm, "generateEdgesPochmann");
+        return buildOption("generateEdgesM2", selectedEdgeAlgorithm, "M2 Edges") +
+                buildOption("generateEdgesPochmann", selectedEdgeAlgorithm, "Pochmann Edges");
     }
 
     private String buildCornerAlgorithmOptions(String selectedCornerAlgorithm) {
-        return buildOption("generateCornersPochmann", selectedCornerAlgorithm, "generateCornersPochmann");
+        return buildOption("generateCornersPochmann", selectedCornerAlgorithm, "Pochmann Corners");
     }
 
     private String buildOption(String value, String selectedValue, String label) {
@@ -339,6 +246,21 @@ public class WebServer {
         try (OutputStream output = exchange.getResponseBody()) {
             output.write(bytes);
         }
+    }
+
+
+    private static void sendCss(HttpExchange exchange, String body) throws IOException {
+        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+        exchange.getResponseHeaders().set("Content-Type", "text/css; charset=utf-8");
+        exchange.sendResponseHeaders(200, bytes.length);
+        try (OutputStream output = exchange.getResponseBody()) {
+            output.write(bytes);
+        }
+    }
+
+    private static void sendNotFound(HttpExchange exchange) throws IOException {
+        exchange.sendResponseHeaders(404, -1);
+        exchange.close();
     }
 
     private record PageModel(

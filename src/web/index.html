@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blindfolded Solution Generator</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <h1>Blindfolded Trainer Dashboard</h1>
+
+      <form action="/execute" method="get" class="dashboard">
+        <section class="panel cube-panel">
+          %s
+        </section>
+
+        <section class="panel settings-panel">
+          <div class="field-grid">
+            <div class="field">
+              <label for="edgeAlgorithm">Edge Algorithm</label>
+              <select id="edgeAlgorithm" name="edgeAlgorithm">
+%s
+              </select>
+            </div>
+            <div class="field">
+              <label for="cornerAlgorithm">Corner Algorithm</label>
+              <select id="cornerAlgorithm" name="cornerAlgorithm">
+%s
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="scramble">Scramble</label>
+            <textarea id="scramble" name="scramble">%s</textarea>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn btn-secondary" type="submit" name="action" value="generateScramble">generate Scramble</button>
+            <button class="btn btn-primary" type="submit" name="action" value="scrambleCube">Scramble</button>
+          </div>
+
+          <div class="switch-row">
+            <input id="memoryHelper" type="checkbox" name="memoryHelper" %s />
+            <label for="memoryHelper">Memory Helper</label>
+          </div>
+        </section>
+
+        <section class="results-grid">
+          <article class="panel result-column">
+            <label for="edge-pairs">Edge Pairs</label>
+            <textarea id="edge-pairs" class="readonly" readonly>%s</textarea>
+
+            <label for="edge-setup-moves">Setup-Moves Edges</label>
+            <textarea id="edge-setup-moves" class="readonly" readonly>%s</textarea>
+          </article>
+
+          <article class="panel result-column">
+            <label for="corner-pairs">Corner Pairs</label>
+            <textarea id="corner-pairs" class="readonly" readonly>%s</textarea>
+
+            <label for="corner-setup-moves">Setup-Moves Corners</label>
+            <textarea id="corner-setup-moves" class="readonly" readonly>%s</textarea>
+          </article>
+        </section>
+      </form>
+    </main>
+
+    <script>
+      const scrambleInput = document.getElementById('scramble');
+      const autoResize = () => {
+        scrambleInput.style.height = 'auto';
+        scrambleInput.style.height = `${scrambleInput.scrollHeight}px`;
+      };
+      scrambleInput.addEventListener('input', autoResize);
+      autoResize();
+    </script>
+  </body>
+</html>
