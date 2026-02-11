@@ -5,7 +5,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Represents the MovesParser class.
+ */
 public class MovesParser {
+    /**
+     * Represents the Moves enum.
+     */
     public enum Moves {
         R,
         L,
@@ -14,6 +20,9 @@ public class MovesParser {
         F,
         B;
 
+        /**
+         * Executes getMovesFromChar.
+         */
         public static Moves getMovesFromChar(char moveChar) {
             for (Moves move : Moves.values()) {
                 if (move.name().equals(String.valueOf(moveChar).toUpperCase())) {
@@ -24,6 +33,9 @@ public class MovesParser {
         }
     }
 
+    /**
+     * Represents the MoveDirections enum.
+     */
     public enum MoveDirections {
         CLOCKWISE("", 1),
         DOUBLE("2", 2),
@@ -38,6 +50,9 @@ public class MovesParser {
         }
 
 
+        /**
+         * Executes getDirection.
+         */
         public static MoveDirections getDirection(String direction) {
             for (MoveDirections directions : MoveDirections.values()) {
                 if (directions.direction.equals(direction)) {
@@ -48,6 +63,9 @@ public class MovesParser {
         }
     }
 
+    /**
+     * Represents the AllMoves enum.
+     */
     public enum AllMoves {
         R_CW(Moves.R, MoveDirections.CLOCKWISE), L_CW(Moves.L, MoveDirections.CLOCKWISE), U_CW(Moves.U, MoveDirections.CLOCKWISE),
         D_CW(Moves.D, MoveDirections.CLOCKWISE), F_CW(Moves.F, MoveDirections.CLOCKWISE), B_CW(Moves.B, MoveDirections.CLOCKWISE),
@@ -64,6 +82,9 @@ public class MovesParser {
             this.direction = direction;
         }
 
+        /**
+         * Executes getAllMovesFromMoveAndDirection.
+         */
         public static AllMoves getAllMovesFromMoveAndDirection(Moves move, MoveDirections direction) {
             for (AllMoves allMoves : AllMoves.values()) {
                 if (allMoves.move.equals(move) && allMoves.direction.equals(direction)) {
@@ -73,10 +94,16 @@ public class MovesParser {
             return null;
         }
 
+        /**
+         * Executes getTurns.
+         */
         public int getTurns() {
             return this.direction.turns;
         }
 
+        /**
+         * Executes getMove.
+         */
         public Moves getMove() {
             return this.move;
         }
@@ -93,6 +120,9 @@ public class MovesParser {
         return moves;
     }
 
+    /**
+     * Executes getMovesFromScramble.
+     */
     public static List<AllMoves> getMovesFromScramble(String scramble) {
         List<AllMoves> allMoves = new ArrayList<>();
         for (String wholeMove : parseScramble(scramble)) {

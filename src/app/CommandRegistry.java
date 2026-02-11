@@ -22,6 +22,9 @@ import java.util.Set;
 public class CommandRegistry {
     private final Map<String, Command> commands;
 
+    /**
+     * Creates a new CommandRegistry instance.
+     */
     public CommandRegistry(CubeManager cubeManager) {
         Objects.requireNonNull(cubeManager);
         this.commands = new HashMap<>();
@@ -34,14 +37,23 @@ public class CommandRegistry {
         register(new ToggleMemoryHelper(cubeManager));
     }
 
+    /**
+     * Executes register.
+     */
     public void register(Command command) {
         commands.put(command.getCommandName(), command);
     }
 
+    /**
+     * Executes get.
+     */
     public Command get(String name) {
         return commands.get(name);
     }
 
+    /**
+     * Executes listNames.
+     */
     public Set<String> listNames() {
         return Collections.unmodifiableSet(commands.keySet());
     }

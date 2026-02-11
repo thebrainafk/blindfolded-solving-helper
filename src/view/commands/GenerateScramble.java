@@ -13,11 +13,17 @@ public class GenerateScramble extends Command {
 
     private static final String COMMAND_NAME = "generateScramble";
 
+    /**
+     * Creates a new GenerateScramble instance.
+     */
     public GenerateScramble(CubeManager cubeManager) {
         super(cubeManager, COMMAND_NAME);
     }
 
     @Override
+    /**
+     * Executes execute.
+     */
     public Result execute(String arguments) {
         String scramble;
 

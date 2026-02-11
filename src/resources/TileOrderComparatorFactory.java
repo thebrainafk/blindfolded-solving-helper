@@ -12,11 +12,17 @@ import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * Represents the TileOrderComparatorFactory class.
+ */
 public final class TileOrderComparatorFactory {
 
     private TileOrderComparatorFactory() {
     }
 
+    /**
+     * Executes fromResource.
+     */
     public static Comparator<Tile> fromResource(String resourcePath) throws GameArgumentException {
         Map<Tile, Integer> priorityMap = new EnumMap<>(Tile.class);
         int priority = 0;

@@ -11,15 +11,24 @@ import view.Result;
 
 import java.util.List;
 
+/**
+ * Represents the GenerateEdgesPochmann class.
+ */
 public class GenerateEdgesPochmann extends Command {
 
     private static final String COMMAND_NAME = "generateEdgesPochmann";
 
+    /**
+     * Creates a new GenerateEdgesPochmann instance.
+     */
     public GenerateEdgesPochmann(CubeManager cubeManager) {
         super(cubeManager, COMMAND_NAME);
     }
 
     @Override
+    /**
+     * Executes execute.
+     */
     public Result execute(String arguments) {
         CubeState cubeState = this.getCurrentCubeState();
         String translation;

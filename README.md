@@ -1,102 +1,172 @@
 # Blindfolded Solution Generator
 
-This repository contains the first iteration of the Blindfolded Solution Generator project. The current codebase focuses on the core command execution logic so it can be integrated into a future web API.
+Blindfolded Solution Generator is currently a Java application with a built-in HTTP server (`com.sun.net.httpserver.HttpServer`).
+It can run locally and can also be deployed as a standalone backend for a static frontend (for example GitHub Pages).
 
-## Getting started
+## Current Project Setup
 
-The project is a plain Java application. From the repository root, compile and run the entry point:
+- Frontend and backend are currently stored in the same repository.
+- The original server-rendered UI is still available at:
+  - `/`
+  - `/execute`
+  - `/styles.css`
+- JSON API endpoints are available for split hosting.
+
+## Run Locally
 
 ```bash
 javac -d out $(find src -name "*.java")
 java -cp out Main
 ```
 
-The server reads the `PORT` environment variable and falls back to `8080`.
+Default port is `8080`.
+If the `PORT` environment variable is set, that port is used.
 
-## Using the command service
+## API Endpoints
 
-The application layer exposes a command registry and service that you can call from a web controller or another UI:
+### Health Check
 
-```java
-CubeManager cubeManager = new CubeManager();
-CommandRegistry registry = new CommandRegistry(cubeManager);
-CommandService service = new CommandService(registry);
-
-Result result = service.execute(new CommandRequest("generateScramble", null));
+```http
+GET /api/status
 ```
 
-## Simple web UI
+Example response:
 
-The current entry point starts a tiny HTTP server so you can execute commands in a browser:
+```json
+{"success":true,"status":"ok"}
+```
 
-1. Run the app: `java -cp out Main`
-2. Open `http://localhost:8080`
-3. Pick a command, add optional arguments, and execute it to see the output and cube state.
+### Execute Action
 
-## API endpoints
+```http
+GET /api/execute?action=...&scramble=...&edgeAlgorithm=...&cornerAlgorithm=...&memoryHelper=true|false
+```
 
-For split frontend/backend hosting, you can call these endpoints from a separate frontend:
+Example:
 
-- `GET /api/status` – health check.
-- `GET /api/execute?action=...&scramble=...&edgeAlgorithm=...&cornerAlgorithm=...&memoryHelper=true|false` – executes the requested action and returns JSON.
+```bash
+curl "http://localhost:8080/api/execute?action=generateScramble&memoryHelper=false"
+```
 
-Configure CORS for your frontend domain using `CORS_ALLOWED_ORIGINS`, for example:
+## CORS Configuration
+
+To allow requests from a frontend domain (for example GitHub Pages), set:
 
 ```bash
 CORS_ALLOWED_ORIGINS="https://<github-user>.github.io"
 ```
 
-Multiple origins can be comma-separated.
+Multiple origins are supported (comma-separated):
 
-## Deploying backend on Render (free tier)
+```bash
+CORS_ALLOWED_ORIGINS="https://<github-user>.github.io,https://example.com"
+```
 
-### Do I need a separate repository?
+---
 
-No. You can keep everything in this repository.
+## Render Deployment: Exact Steps
 
-- **Frontend**: host static files on GitHub Pages (or another static host).
-- **Backend**: deploy this Java service to Render using the same repository.
+### Which Render service type should you use?
 
-You only need a separate repository if you want independent release/versioning between frontend and backend.
+Use a **Web Service** with **Docker**.
 
-### What do I upload to Render?
+Do **not** use Static Site for the backend, because this service must process HTTP API requests.
 
-When Render is connected to GitHub, you do not upload files manually.
-Render pulls from the repository automatically on each deploy.
+### Step-by-step in Render
 
-If you use this monorepo setup, Render still only runs the backend process based on the Dockerfile/commands.
+1. Open Render.
+2. Click **New +** → **Web Service**.
+3. Connect GitHub and choose this repository.
+4. Choose **Docker** as environment/runtime (Render will detect the `Dockerfile`).
+5. Set a service name (for example `blindfolded-backend`).
+6. Choose a region and plan (Free plan is fine to start).
+7. Set environment variables:
+   - `PORT` (optional, Render usually injects one automatically)
+   - `CORS_ALLOWED_ORIGINS` = your frontend URL (for example `https://<github-user>.github.io`)
+8. Deploy.
+9. Test:
+   - `https://<your-service>.onrender.com/api/status`
 
-### Docker deployment
+If this returns `{"success":true,"status":"ok"}`, your backend is live.
 
-A Dockerfile is included. You can run locally with:
+### What do you upload to Render?
+
+You do not upload files manually.
+Render pulls from GitHub on deploy.
+
+In your current monorepo setup this is fully supported.
+Render will build and run the backend process defined by your Dockerfile.
+
+---
+
+## Do You Need a Separate Repository?
+
+No, not required.
+
+Two valid options:
+
+1. **Single repository (recommended for now)**
+   - Frontend + backend together.
+   - Frontend hosted on GitHub Pages.
+   - Backend hosted on Render.
+
+2. **Separate repositories (optional later)**
+   - Useful if you want independent release/versioning pipelines.
+
+If you are just shipping now, keep one repository.
+
+---
+
+## GitHub Pages + Render Together
+
+### Frontend (GitHub Pages)
+
+- Publish static files from `/docs` or `gh-pages` branch.
+- Configure frontend API base URL to your Render backend URL:
+  - `https://<your-service>.onrender.com`
+
+### Backend (Render)
+
+- Stays reachable as a Web Service.
+- Frontend calls:
+  - `/api/status`
+  - `/api/execute`
+
+---
+
+## Docker Local Test
 
 ```bash
 docker build -t blindfolded-backend .
-docker run --rm -p 8080:8080 -e PORT=8080 blindfolded-backend
+docker run --rm -p 8080:8080 -e PORT=8080 -e CORS_ALLOWED_ORIGINS="http://localhost:3000" blindfolded-backend
 ```
 
-## GitHub Actions workflow for automated deploy
+Then test:
 
-This repository includes `.github/workflows/render-deploy.yml`:
+```bash
+curl http://localhost:8080/api/status
+```
 
-1. Compiles the Java project on every push to `main`/`master`.
-2. Triggers Render via deploy hook.
+---
 
-Add a repository secret named `RENDER_DEPLOY_HOOK_URL` with your Render deploy hook URL.
+## CI/CD (Optional)
 
-## Available commands
+A workflow is included at `.github/workflows/render-deploy.yml`.
 
-- `generateScramble` – runs the current cube manager test routine and returns a status message.
-- `status` – returns a simple status message to verify command execution.
+It does:
 
-## Project structure
+1. Java compile check on push (`main` / `master`).
+2. Render deploy hook trigger.
 
-- `src/app` – command registry/service for UI or web adapters.
-- `src/model` – cube model, cube state, and move parsing.
-- `src/view` – shared result/response types returned by commands.
+Required GitHub secret:
 
-## Next steps
+- `RENDER_DEPLOY_HOOK_URL`
 
-- Add commands for applying moves, loading a cube state, and exporting blindfolded letter sequences.
-- Improve cube state formatting for readable output.
-- Add a thin HTTP API (e.g., SparkJava or Spring Boot) so a future web UI can call the command service.
+---
+
+## Important Directories
+
+- `src/app` - web server, command registry, application layer.
+- `src/model` - cube model and solving logic.
+- `src/view` - result/rendering layer.
+- `src/web` - HTML/CSS for server-rendered UI.

@@ -5,11 +5,17 @@ import view.MovesParser;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the Cube class.
+ */
 public class Cube {
     private final Map<CornerPiece, Corner> corners;
     private final Map<EdgePiece, Edge> edges;
 
 
+    /**
+     * Creates a new Cube instance.
+     */
     public Cube() {
         this.corners = new HashMap<>();
         this.edges = new HashMap<>();
@@ -25,10 +31,16 @@ public class Cube {
         }
     }
 
+    /**
+     * Executes getCorners.
+     */
     public Map<CornerPiece, Corner> getCorners() {
         return new HashMap<>(corners);
     }
 
+    /**
+     * Executes getEdges.
+     */
     public Map<EdgePiece, Edge> getEdges() {
         return new HashMap<>(edges);
     }
@@ -41,6 +53,9 @@ public class Cube {
         this.corners.put(corner.getCorner(), corner);
     }
 
+    /**
+     * Executes turn.
+     */
     public void turn(MovesParser.AllMoves move) {
         Corner firstCorner = null;
         Corner secondCorner = null;

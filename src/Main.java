@@ -15,6 +15,9 @@ public final class Main {
     private Main() {
     }
 
+    /**
+     * Executes main.
+     */
     public static void main(String[] args) {
         CubeManager cubeManager = new CubeManager();
         CommandRegistry registry = new CommandRegistry(cubeManager);

@@ -11,14 +11,23 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the SetupMoveGenerator class.
+ */
 public class SetupMoveGenerator {
 
     private final Map<Tile, String> setupMoves;
 
+    /**
+     * Creates a new SetupMoveGenerator instance.
+     */
     public SetupMoveGenerator(String resourcePath) throws GameArgumentException {
         this.setupMoves = this.loadSetupMoves(resourcePath);
     }
 
+    /**
+     * Executes generateFromTileSequence.
+     */
     public String generateFromTileSequence(List<Tile> tileSequence) {
         StringBuilder setupMovesBuilder = new StringBuilder();
         for (Tile tile : tileSequence) {

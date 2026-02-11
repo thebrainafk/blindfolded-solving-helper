@@ -8,15 +8,24 @@ import view.Result;
 
 import java.util.List;
 
+/**
+ * Represents the ScrambleCube class.
+ */
 public class ScrambleCube extends Command {
 
     private static final String COMMAND_NAME = "scrambleCube";
 
+    /**
+     * Creates a new ScrambleCube instance.
+     */
     public ScrambleCube(CubeManager cubeManager) {
         super(cubeManager, COMMAND_NAME);
     }
 
     @Override
+    /**
+     * Executes execute.
+     */
     public Result execute(String arguments) {
         if (arguments.isEmpty()) {
             return Result.error("no scramble given");

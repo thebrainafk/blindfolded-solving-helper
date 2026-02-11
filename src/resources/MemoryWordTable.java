@@ -7,18 +7,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * Represents the MemoryWordTable class.
+ */
 public class MemoryWordTable {
     private final String[][] words;
 
+    /**
+     * Creates a new MemoryWordTable instance.
+     */
     public MemoryWordTable(InputStream input) throws GameArgumentException {
         this.words = new String[24][24];
         this.load(input);
     }
 
+    /**
+     * Executes setWord.
+     */
     public void setWord(int row, int column, String word) {
         words[row][column] = word;
     }
 
+    /**
+     * Executes getWord.
+     */
     public String getWord(int row, int column) {
         return words[row][column];
     }

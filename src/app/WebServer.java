@@ -33,6 +33,9 @@ public class WebServer {
     private final CubeNetRenderer cubeNetRenderer;
     private final Set<String> corsAllowedOrigins;
 
+    /**
+     * Creates a new WebServer instance.
+     */
     public WebServer(CommandService commandService, CubeManager cubeManager) {
         this.commandService = commandService;
         this.cubeManager = cubeManager;
@@ -40,6 +43,9 @@ public class WebServer {
         this.corsAllowedOrigins = parseAllowedOrigins(System.getenv("CORS_ALLOWED_ORIGINS"));
     }
 
+    /**
+     * Executes start.
+     */
     public void start(int port) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", this::handleIndex);

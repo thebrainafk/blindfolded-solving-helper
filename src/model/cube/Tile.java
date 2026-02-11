@@ -5,6 +5,9 @@ import model.CubeState;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the Tile enum.
+ */
 public enum Tile {
     A(Constants.WHITE, 0, 0),
     B(Constants.WHITE, 1, 1),
@@ -73,6 +76,9 @@ public enum Tile {
         this.column = column;
     }
 
+    /**
+     * Executes getCoordinates.
+     */
     public int[] getCoordinates(Tile tile) {
         return new int[]{this.row, tile.column};
     }
@@ -220,34 +226,58 @@ public enum Tile {
         back.put(n, w);
     }
 
+    /**
+     * Executes getLeft.
+     */
     public Tile getLeft() {
         return left.get(this);
     }
 
+    /**
+     * Executes getRight.
+     */
     public Tile getRight() {
         return right.get(this);
     }
 
+    /**
+     * Executes getUp.
+     */
     public Tile getUp() {
         return up.get(this);
     }
 
+    /**
+     * Executes getDown.
+     */
     public Tile getDown() {
         return down.get(this);
     }
 
+    /**
+     * Executes getFront.
+     */
     public Tile getFront() {
         return front.get(this);
     }
 
+    /**
+     * Executes getBack.
+     */
     public Tile getBack() {
         return back.get(this);
     }
 
+    /**
+     * Executes getColor.
+     */
     public String getColor() {
         return this.color;
     }
 
+    /**
+     * Executes getLocation.
+     */
     public Tile getLocation(CubeState cubeState) {
         Tile location = null;
         CornerPiece cornerFromTile = CornerPiece.getPieceFromTile(this);
@@ -264,6 +294,9 @@ public enum Tile {
         return location;
     }
 
+    /**
+     * Executes getOppositeTile.
+     */
     public Tile getOppositeTile() {
         switch (this) {
             case c -> {

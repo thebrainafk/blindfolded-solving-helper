@@ -9,10 +9,16 @@ import model.cube.EdgePiece;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the CubeState class.
+ */
 public class CubeState {
     private final Map<CornerPiece, Corner> corners;
     private final Map<EdgePiece, Edge> edges;
 
+    /**
+     * Creates a new CubeState instance.
+     */
     public CubeState(Cube cube) {
         this.corners = new HashMap<>();
         this.edges = new HashMap<>();
@@ -26,10 +32,16 @@ public class CubeState {
         }
     }
 
+    /**
+     * Executes getCorners.
+     */
     public Map<CornerPiece, Corner> getCorners() {
         return this.corners;
     }
 
+    /**
+     * Executes getEdges.
+     */
     public Map<EdgePiece, Edge> getEdges() {
         return this.edges;
     }
