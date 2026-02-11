@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +48,7 @@ public class SetupMoveGenerator {
     private Map<Tile, String> loadSetupMoves(String resourcePath) throws GameArgumentException {
         Map<Tile, String> setupMoveMap = new EnumMap<>(Tile.class);
 
-        try (InputStream inputStream = SetupMoveGenerator.class.getClassLoader().getResourceAsStream(resourcePath)) {
+        try (InputStream inputStream = openResource(resourcePath)) {
             if (inputStream == null) {
                 throw new GameArgumentException(resourcePath + " not found");
             }
@@ -83,5 +85,24 @@ public class SetupMoveGenerator {
         }
 
         return setupMoveMap;
+    }
+
+    private InputStream openResource(String resourcePath) throws IOException {
+        InputStream classpathInput = SetupMoveGenerator.class.getClassLoader().getResourceAsStream(resourcePath);
+        if (classpathInput != null) {
+            return classpathInput;
+        }
+
+        Path srcRelativePath = Path.of("src", resourcePath);
+        if (Files.exists(srcRelativePath)) {
+            return Files.newInputStream(srcRelativePath);
+        }
+
+        Path directPath = Path.of(resourcePath);
+        if (Files.exists(directPath)) {
+            return Files.newInputStream(directPath);
+        }
+
+        return null;
     }
 }

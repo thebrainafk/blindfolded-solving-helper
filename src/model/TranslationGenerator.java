@@ -7,6 +7,8 @@ import resources.MemoryWordTable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -44,9 +46,7 @@ public class TranslationGenerator {
     }
 
     private void initializeMemoryWordTable() throws GameArgumentException {
-        try (InputStream inputStream = MemoryWordTable.class
-                .getClassLoader()
-                .getResourceAsStream("resources/memory_words.txt")) {
+        try (InputStream inputStream = openResource("resources/memory_words.txt")) {
             if (inputStream == null) {
                 throw new GameArgumentException("memory_words.txt not found");
             }
@@ -55,6 +55,25 @@ public class TranslationGenerator {
             throw new GameArgumentException("Unable to load memory_words.txt: " + error.getMessage());
         }
 
+    }
+
+    private InputStream openResource(String resourcePath) throws IOException {
+        InputStream classpathInput = MemoryWordTable.class.getClassLoader().getResourceAsStream(resourcePath);
+        if (classpathInput != null) {
+            return classpathInput;
+        }
+
+        Path srcRelativePath = Path.of("src", resourcePath);
+        if (Files.exists(srcRelativePath)) {
+            return Files.newInputStream(srcRelativePath);
+        }
+
+        Path directPath = Path.of(resourcePath);
+        if (Files.exists(directPath)) {
+            return Files.newInputStream(directPath);
+        }
+
+        return null;
     }
 
     /**

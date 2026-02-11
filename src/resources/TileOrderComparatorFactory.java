@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.Map;
@@ -27,7 +29,7 @@ public final class TileOrderComparatorFactory {
         Map<Tile, Integer> priorityMap = new EnumMap<>(Tile.class);
         int priority = 0;
 
-        try (InputStream inputStream = TileOrderComparatorFactory.class.getClassLoader().getResourceAsStream(resourcePath)) {
+        try (InputStream inputStream = openResource(resourcePath)) {
             if (inputStream == null) {
                 throw new GameArgumentException(resourcePath + " not found");
             }
@@ -59,5 +61,24 @@ public final class TileOrderComparatorFactory {
         return Comparator
                 .comparingInt((Tile tile) -> priorityMap.getOrDefault(tile, Integer.MAX_VALUE))
                 .thenComparing(Enum::name);
+    }
+
+    private static InputStream openResource(String resourcePath) throws IOException {
+        InputStream classpathInput = TileOrderComparatorFactory.class.getClassLoader().getResourceAsStream(resourcePath);
+        if (classpathInput != null) {
+            return classpathInput;
+        }
+
+        Path srcRelativePath = Path.of("src", resourcePath);
+        if (Files.exists(srcRelativePath)) {
+            return Files.newInputStream(srcRelativePath);
+        }
+
+        Path directPath = Path.of(resourcePath);
+        if (Files.exists(directPath)) {
+            return Files.newInputStream(directPath);
+        }
+
+        return null;
     }
 }
