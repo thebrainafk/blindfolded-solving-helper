@@ -3,6 +3,7 @@ package view.commands;
 import model.CubeManager;
 import model.CubeState;
 import model.GameArgumentException;
+import model.SetupMoveGenerator;
 import model.TranslationGenerator;
 import model.cube.Tile;
 import resources.TileOrderComparatorFactory;
@@ -22,17 +23,20 @@ public class GenerateCornersPochmann extends Command {
     public Result execute(String arguments) {
         CubeState cubeState = this.getCurrentCubeState();
         String translation;
+        String setupMoves;
 
         try {
             TranslationGenerator translationGenerator = new TranslationGenerator(cubeState, cubeManager.isMemoryHelperEnabled(), Tile.E,
                     TileOrderComparatorFactory.fromResource("resources/corners_pochmann_tile_order.txt"));
             List<Tile> tileSequence = translationGenerator.generateTileSequence();
             translation = translationGenerator.translatePochmann(tileSequence);
+            SetupMoveGenerator setupMoveGenerator = new SetupMoveGenerator("resources/corners_pochmann_setup_moves.txt");
+            setupMoves = setupMoveGenerator.generateFromTileSequence(tileSequence);
         } catch (GameArgumentException error) {
             return Result.error(error.getMessage());
         }
 
-        return Result.corner(translation);
+        return Result.corner(translation, setupMoves);
     }
 
 }
