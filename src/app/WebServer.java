@@ -92,11 +92,16 @@ public class WebServer {
 
         if (errorOutput.isEmpty()) {
             if ("generateScramble".equals(action)) {
-                Result scrambleResult = executeCommand("generateScramble", "");
-                if (scrambleResult.success()) {
-                    scrambleText = scrambleResult.scramble();
+                Result resetResult = executeCommand("resetCube", "");
+                if (!resetResult.success()) {
+                    errorOutput = resetResult.errorMessage();
                 } else {
-                    errorOutput = scrambleResult.errorMessage();
+                    Result scrambleResult = executeCommand("generateScramble", "");
+                    if (scrambleResult.success()) {
+                        scrambleText = scrambleResult.scramble();
+                    } else {
+                        errorOutput = scrambleResult.errorMessage();
+                    }
                 }
             } else if ("scrambleCube".equals(action)) {
                 Result resetResult = executeCommand("resetCube", "");
