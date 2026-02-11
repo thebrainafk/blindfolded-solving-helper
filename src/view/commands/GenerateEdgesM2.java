@@ -12,15 +12,24 @@ import view.Result;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the GenerateEdgesM2 class.
+ */
 public class GenerateEdgesM2 extends Command {
 
     private static final String COMMAND_NAME = "generateEdgesM2";
 
+    /**
+     * Creates a new GenerateEdgesM2 instance.
+     */
     public GenerateEdgesM2(CubeManager cubeManager) {
         super(cubeManager, COMMAND_NAME);
     }
 
     @Override
+    /**
+     * Executes execute.
+     */
     public Result execute(String arguments) {
         CubeState cubeState = this.getCurrentCubeState();
         String translation;

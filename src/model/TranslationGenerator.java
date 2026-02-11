@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Represents the TranslationGenerator class.
+ */
 public class TranslationGenerator {
 
     private final StringBuilder builder;
@@ -54,6 +57,9 @@ public class TranslationGenerator {
 
     }
 
+    /**
+     * Executes translateTilePairs.
+     */
     public String translateTilePairs(List<Tile> tileSequence) {
         for (int i = 0; i < tileSequence.size(); i = i + 2) {
             Tile firstTile = tileSequence.get(i);
@@ -81,6 +87,9 @@ public class TranslationGenerator {
         }
     }
 
+    /**
+     * Executes generateTileSequence.
+     */
     public List<Tile> generateTileSequence() {
         List<Tile> tileSequence = new ArrayList<>();
 

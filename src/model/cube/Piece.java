@@ -3,6 +3,9 @@ package model.cube;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the Piece class.
+ */
 public abstract class Piece {
     protected final Map<Tile, Tile> currentTileLocation;
 
@@ -10,6 +13,9 @@ public abstract class Piece {
         this.currentTileLocation = new HashMap<>();
     }
 
+    /**
+     * Executes getCurrentTileLocation.
+     */
     public Tile getCurrentTileLocation(Tile tile) {
         return this.currentTileLocation.get(tile);
     }

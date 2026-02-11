@@ -11,10 +11,16 @@ import java.util.Objects;
 public class CommandService {
     private final CommandRegistry registry;
 
+    /**
+     * Creates a new CommandService instance.
+     */
     public CommandService(CommandRegistry registry) {
         this.registry = Objects.requireNonNull(registry);
     }
 
+    /**
+     * Executes execute.
+     */
     public Result execute(CommandRequest request) {
         if (request == null || request.name() == null || request.name().isBlank()) {
             return Result.error("Command name is required");

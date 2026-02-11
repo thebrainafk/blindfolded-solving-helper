@@ -7,6 +7,9 @@ package model;
  */
 public class GameArgumentException extends Exception {
 
+    /**
+     * Creates a new GameArgumentException instance.
+     */
     public GameArgumentException(String message) {
         super(message);
     }

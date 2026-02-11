@@ -20,19 +20,31 @@ public class CubeManager {
     private Cube cube;
     private boolean memoryHelper;
 
+    /**
+     * Creates a new CubeManager instance.
+     */
     public CubeManager() {
         this.cube = new Cube();
         this.memoryHelper = false;
     }
 
+    /**
+     * Executes resetCube.
+     */
     public void resetCube() {
         this.cube = new Cube();
     }
 
+    /**
+     * Executes getCube.
+     */
     public Cube getCube() {
         return this.cube;
     }
 
+    /**
+     * Executes generateEdgesM2TileSequence.
+     */
     public List<Tile> generateEdgesM2TileSequence(CubeState cubeState, TranslationGenerator translationGenerator) throws GameArgumentException {
         TranslationGenerator cornerTranslator = new TranslationGenerator(cubeState, memoryHelper, Tile.E,
                 TileOrderComparatorFactory.fromResource("resources/corners_pochmann_tile_order.txt"));
@@ -55,11 +67,17 @@ public class CubeManager {
         return translationGenerator.generateTileSequence();
     }
 
+    /**
+     * Executes generateScramble.
+     */
     public String generateScramble() throws GameArgumentException {
         SimpleScrambleGenerator simpleScrambleGenerator = new SimpleScrambleGenerator();
         return simpleScrambleGenerator.generateLocalScramble(15);
     }
 
+    /**
+     * Executes scrambleCube.
+     */
     public void scrambleCube(List<MovesParser.AllMoves> allMoves) throws GameArgumentException {
         for (MovesParser.AllMoves move : allMoves) {
             for (int i = 0; i < move.getTurns(); i++) {
@@ -68,10 +86,16 @@ public class CubeManager {
         }
     }
 
+    /**
+     * Executes toggleMemoryHelper.
+     */
     public void toggleMemoryHelper() {
         this.memoryHelper = !this.memoryHelper;
     }
 
+    /**
+     * Executes isMemoryHelperEnabled.
+     */
     public boolean isMemoryHelperEnabled() {
         return this.memoryHelper;
     }

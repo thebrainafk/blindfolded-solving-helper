@@ -3,6 +3,9 @@ package model.cube;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the EdgePiece enum.
+ */
 public enum EdgePiece {
     EDGE_A(Tile.a, Tile.q),
     EDGE_B(Tile.b, Tile.m),
@@ -67,6 +70,9 @@ public enum EdgePiece {
         turnBack.put(EDGE_N, EDGE_A);
     }
 
+    /**
+     * Executes getPieceFromTile.
+     */
     public static EdgePiece getPieceFromTile(Tile tile) {
         for (EdgePiece piece : EdgePiece.values()) {
             if (piece.firstTile == tile || piece.secondTile == tile) {
@@ -76,34 +82,58 @@ public enum EdgePiece {
         return null;
     }
 
+    /**
+     * Executes getFirstTile.
+     */
     public Tile getFirstTile() {
         return this.firstTile;
     }
 
+    /**
+     * Executes getSecondTile.
+     */
     public Tile getSecondTile() {
         return this.secondTile;
     }
 
+    /**
+     * Executes getLeft.
+     */
     public EdgePiece getLeft() {
         return turnLeft.get(this);
     }
 
+    /**
+     * Executes getRight.
+     */
     public EdgePiece getRight() {
         return turnRight.get(this);
     }
 
+    /**
+     * Executes getUp.
+     */
     public EdgePiece getUp() {
         return turnUp.get(this);
     }
 
+    /**
+     * Executes getDown.
+     */
     public EdgePiece getDown() {
         return turnDown.get(this);
     }
 
+    /**
+     * Executes getFront.
+     */
     public EdgePiece getFront() {
         return turnFront.get(this);
     }
 
+    /**
+     * Executes getBack.
+     */
     public EdgePiece getBack() {
         return turnBack.get(this);
     }

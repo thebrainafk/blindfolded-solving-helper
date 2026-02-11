@@ -3,6 +3,9 @@ package model.cube;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the CornerPiece enum.
+ */
 public enum CornerPiece {
     CORNER_A(Tile.A, Tile.E, Tile.R),
     CORNER_B(Tile.B, Tile.N, Tile.Q),
@@ -65,6 +68,9 @@ public enum CornerPiece {
         turnBack.put(CORNER_W, CORNER_B);
     }
 
+    /**
+     * Executes getPieceFromTile.
+     */
     public static CornerPiece getPieceFromTile(Tile tile) {
         for (CornerPiece piece : CornerPiece.values()) {
             if (piece.firstTile == tile || piece.secondTile == tile || piece.thirdTile == tile) {
@@ -74,38 +80,65 @@ public enum CornerPiece {
         return null;
     }
 
+    /**
+     * Executes getFirstTile.
+     */
     public Tile getFirstTile() {
         return this.firstTile;
     }
 
+    /**
+     * Executes getSecondTile.
+     */
     public Tile getSecondTile() {
         return this.secondTile;
     }
 
+    /**
+     * Executes getThirdTile.
+     */
     public Tile getThirdTile() {
         return this.thirdTile;
     }
 
+    /**
+     * Executes getLeft.
+     */
     public CornerPiece getLeft() {
         return turnLeft.get(this);
     }
 
+    /**
+     * Executes getRight.
+     */
     public CornerPiece getRight() {
         return turnRight.get(this);
     }
 
+    /**
+     * Executes getUp.
+     */
     public CornerPiece getUp() {
         return turnUp.get(this);
     }
 
+    /**
+     * Executes getDown.
+     */
     public CornerPiece getDown() {
         return turnDown.get(this);
     }
 
+    /**
+     * Executes getFront.
+     */
     public CornerPiece getFront() {
         return turnFront.get(this);
     }
 
+    /**
+     * Executes getBack.
+     */
     public CornerPiece getBack() {
         return turnBack.get(this);
     }

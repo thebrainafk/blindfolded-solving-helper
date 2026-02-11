@@ -1,15 +1,24 @@
 package model.cube;
 
+/**
+ * Represents the Corner class.
+ */
 public class Corner extends Piece {
     private final CornerPiece corner;
     private CornerPiece currentLocation;
 
+    /**
+     * Creates a new Corner instance.
+     */
     public Corner(CornerPiece corner) {
         this.corner = corner;
         this.currentLocation = corner;
         this.initialize();
     }
 
+    /**
+     * Creates a new Corner instance.
+     */
     public Corner(Corner source) {
         this.corner = source.corner;
         this.currentLocation = source.currentLocation;
@@ -22,10 +31,16 @@ public class Corner extends Piece {
         this.currentTileLocation.put(corner.getThirdTile(), corner.getThirdTile());
     }
 
+    /**
+     * Executes getCurrentLocation.
+     */
     public CornerPiece getCurrentLocation() {
         return currentLocation;
     }
 
+    /**
+     * Executes getCorner.
+     */
     public CornerPiece getCorner() {
         return corner;
     }
@@ -34,6 +49,9 @@ public class Corner extends Piece {
         this.currentLocation = corner.currentLocation;
     }
 
+    /**
+     * Executes turnLeft.
+     */
     public void turnLeft(Piece piece) {
         this.swap((Corner) piece);
         Tile nextFirstTile = this.corner.getFirstTile().getLeft();
@@ -44,6 +62,9 @@ public class Corner extends Piece {
         this.currentTileLocation.put(this.corner.getThirdTile(), piece.getCurrentTileLocation(nextThirdTile));
     }
 
+    /**
+     * Executes turnRight.
+     */
     public void turnRight(Piece piece) {
         this.swap((Corner) piece);
         Tile nextFirstTile = this.corner.getFirstTile().getRight();
@@ -54,6 +75,9 @@ public class Corner extends Piece {
         this.currentTileLocation.put(this.corner.getThirdTile(), piece.currentTileLocation.get(nextThirdTile));
     }
 
+    /**
+     * Executes turnUp.
+     */
     public void turnUp(Piece piece) {
         this.swap((Corner) piece);
         Tile nextFirstTile = this.corner.getFirstTile().getUp();
@@ -64,6 +88,9 @@ public class Corner extends Piece {
         this.currentTileLocation.put(this.corner.getThirdTile(), piece.getCurrentTileLocation(nextThirdTile));
     }
 
+    /**
+     * Executes turnDown.
+     */
     public void turnDown(Piece piece) {
         this.swap((Corner) piece);
         Tile nextFirstTile = this.corner.getFirstTile().getDown();
@@ -74,6 +101,9 @@ public class Corner extends Piece {
         this.currentTileLocation.put(this.corner.getThirdTile(), piece.getCurrentTileLocation(nextThirdTile));
     }
 
+    /**
+     * Executes turnFront.
+     */
     public void turnFront(Piece piece) {
         this.swap((Corner) piece);
         Tile nextFirstTile = this.corner.getFirstTile().getFront();
@@ -84,6 +114,9 @@ public class Corner extends Piece {
         this.currentTileLocation.put(this.corner.getThirdTile(), piece.getCurrentTileLocation(nextThirdTile));
     }
 
+    /**
+     * Executes turnBack.
+     */
     public void turnBack(Piece piece) {
         this.swap((Corner) piece);
         Tile nextFirstTile = this.corner.getFirstTile().getBack();

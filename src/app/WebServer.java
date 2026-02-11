@@ -15,7 +15,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Minimal HTTP server exposing command execution for a web UI.
@@ -29,17 +31,27 @@ public class WebServer {
     private final CommandService commandService;
     private final CubeManager cubeManager;
     private final CubeNetRenderer cubeNetRenderer;
+    private final Set<String> corsAllowedOrigins;
 
+    /**
+     * Creates a new WebServer instance.
+     */
     public WebServer(CommandService commandService, CubeManager cubeManager) {
         this.commandService = commandService;
         this.cubeManager = cubeManager;
         this.cubeNetRenderer = new CubeNetRenderer();
+        this.corsAllowedOrigins = parseAllowedOrigins(System.getenv("CORS_ALLOWED_ORIGINS"));
     }
 
+    /**
+     * Executes start.
+     */
     public void start(int port) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", this::handleIndex);
         server.createContext("/execute", this::handleExecute);
+        server.createContext("/api/execute", this::handleApiExecute);
+        server.createContext("/api/status", this::handleApiStatus);
         server.createContext("/styles.css", this::handleStyles);
         server.start();
     }
@@ -77,6 +89,82 @@ public class WebServer {
         String cornerAlgorithm = params.getOrDefault("cornerAlgorithm", DEFAULT_CORNER_ALGORITHM);
         boolean memoryHelperEnabledInForm = "on".equals(params.get("memoryHelper"));
 
+        CommandOutputs outputs = runAction(action, scrambleText, edgeAlgorithm, cornerAlgorithm, memoryHelperEnabledInForm);
+
+        CubeState cubeState = new CubeState(cubeManager.getCube());
+        sendHtml(exchange, renderPage(new PageModel(
+                outputs.errorOutput(),
+                outputs.edgeOutput(),
+                outputs.cornerOutput(),
+                outputs.edgeSetupMovesOutput(),
+                outputs.cornerSetupMovesOutput(),
+                edgeAlgorithm,
+                cornerAlgorithm,
+                cubeManager.isMemoryHelperEnabled(),
+                cubeNetRenderer.render(cubeState),
+                outputs.scrambleText()
+        )));
+    }
+
+    private void handleApiExecute(HttpExchange exchange) throws IOException {
+        addCorsHeaders(exchange);
+
+        if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+            sendEmpty(exchange, 204);
+            return;
+        }
+
+        if (!"GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+            sendMethodNotAllowed(exchange);
+            return;
+        }
+
+        Map<String, String> params = parseQuery(exchange.getRequestURI().getRawQuery());
+        String action = params.getOrDefault("action", "");
+        String scrambleText = params.getOrDefault("scramble", "").trim();
+        String edgeAlgorithm = params.getOrDefault("edgeAlgorithm", DEFAULT_EDGE_ALGORITHM);
+        String cornerAlgorithm = params.getOrDefault("cornerAlgorithm", DEFAULT_CORNER_ALGORITHM);
+        boolean memoryHelperEnabledInForm = "true".equalsIgnoreCase(params.getOrDefault("memoryHelper", "false"));
+
+        CommandOutputs outputs = runAction(action, scrambleText, edgeAlgorithm, cornerAlgorithm, memoryHelperEnabledInForm);
+        CubeState cubeState = new CubeState(cubeManager.getCube());
+        String json = "{" +
+                "\"success\":" + outputs.errorOutput().isBlank() + "," +
+                "\"error\":\"" + escapeJson(outputs.errorOutput()) + "\"," +
+                "\"scramble\":\"" + escapeJson(outputs.scrambleText()) + "\"," +
+                "\"edgePairs\":\"" + escapeJson(outputs.edgeOutput()) + "\"," +
+                "\"edgeSetupMoves\":\"" + escapeJson(outputs.edgeSetupMovesOutput()) + "\"," +
+                "\"cornerPairs\":\"" + escapeJson(outputs.cornerOutput()) + "\"," +
+                "\"cornerSetupMoves\":\"" + escapeJson(outputs.cornerSetupMovesOutput()) + "\"," +
+                "\"memoryHelperEnabled\":" + cubeManager.isMemoryHelperEnabled() + "," +
+                "\"cubeNetHtml\":\"" + escapeJson(cubeNetRenderer.render(cubeState)) + "\"" +
+                "}";
+        sendJson(exchange, json);
+    }
+
+    private void handleApiStatus(HttpExchange exchange) throws IOException {
+        addCorsHeaders(exchange);
+
+        if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+            sendEmpty(exchange, 204);
+            return;
+        }
+
+        if (!"GET".equalsIgnoreCase(exchange.getRequestMethod())) {
+            sendMethodNotAllowed(exchange);
+            return;
+        }
+
+        sendJson(exchange, "{\"success\":true,\"status\":\"ok\"}");
+    }
+
+    private CommandOutputs runAction(
+            String action,
+            String scrambleText,
+            String edgeAlgorithm,
+            String cornerAlgorithm,
+            boolean memoryHelperEnabledInForm
+    ) {
         String errorOutput = "";
         String edgeOutput = "";
         String cornerOutput = "";
@@ -132,19 +220,14 @@ public class WebServer {
             }
         }
 
-        CubeState cubeState = new CubeState(cubeManager.getCube());
-        sendHtml(exchange, renderPage(new PageModel(
+        return new CommandOutputs(
                 errorOutput,
                 edgeOutput,
                 cornerOutput,
                 edgeSetupMovesOutput,
                 cornerSetupMovesOutput,
-                edgeAlgorithm,
-                cornerAlgorithm,
-                cubeManager.isMemoryHelperEnabled(),
-                cubeNetRenderer.render(cubeState),
                 scrambleText
-        )));
+        );
     }
 
     private Result executeCommand(String name, String args) {
@@ -244,6 +327,51 @@ public class WebServer {
                 .replace(">", "&gt;");
     }
 
+    private static String escapeJson(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r");
+    }
+
+    private void addCorsHeaders(HttpExchange exchange) {
+        String requestOrigin = exchange.getRequestHeaders().getFirst("Origin");
+        if (requestOrigin == null || requestOrigin.isBlank()) {
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+        } else if (corsAllowedOrigins.contains("*") || corsAllowedOrigins.contains(requestOrigin)) {
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", requestOrigin);
+        }
+
+        exchange.getResponseHeaders().set("Vary", "Origin");
+        exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, OPTIONS");
+        exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");
+    }
+
+    private static Set<String> parseAllowedOrigins(String rawOrigins) {
+        Set<String> origins = new HashSet<>();
+        if (rawOrigins == null || rawOrigins.isBlank()) {
+            origins.add("*");
+            return origins;
+        }
+
+        for (String origin : rawOrigins.split(",")) {
+            String trimmedOrigin = origin.trim();
+            if (!trimmedOrigin.isBlank()) {
+                origins.add(trimmedOrigin);
+            }
+        }
+
+        if (origins.isEmpty()) {
+            origins.add("*");
+        }
+
+        return origins;
+    }
+
     private static void sendHtml(HttpExchange exchange, String body) throws IOException {
         byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
@@ -263,6 +391,25 @@ public class WebServer {
         }
     }
 
+    private static void sendJson(HttpExchange exchange, String body) throws IOException {
+        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+        exchange.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
+        exchange.sendResponseHeaders(200, bytes.length);
+        try (OutputStream output = exchange.getResponseBody()) {
+            output.write(bytes);
+        }
+    }
+
+    private static void sendEmpty(HttpExchange exchange, int statusCode) throws IOException {
+        exchange.sendResponseHeaders(statusCode, -1);
+        exchange.close();
+    }
+
+    private static void sendMethodNotAllowed(HttpExchange exchange) throws IOException {
+        exchange.sendResponseHeaders(405, -1);
+        exchange.close();
+    }
+
     private static void sendNotFound(HttpExchange exchange) throws IOException {
         exchange.sendResponseHeaders(404, -1);
         exchange.close();
@@ -279,6 +426,16 @@ public class WebServer {
             boolean memoryHelperEnabled,
             String cubeNetHtml,
             String scramble
+    ) {
+    }
+
+    private record CommandOutputs(
+            String errorOutput,
+            String edgeOutput,
+            String cornerOutput,
+            String edgeSetupMovesOutput,
+            String cornerSetupMovesOutput,
+            String scrambleText
     ) {
     }
 }

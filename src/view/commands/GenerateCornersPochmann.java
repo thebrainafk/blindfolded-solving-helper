@@ -11,15 +11,24 @@ import view.Result;
 
 import java.util.List;
 
+/**
+ * Represents the GenerateCornersPochmann class.
+ */
 public class GenerateCornersPochmann extends Command {
 
     private static final String COMMAND_NAME = "generateCornersPochmann";
 
+    /**
+     * Creates a new GenerateCornersPochmann instance.
+     */
     public GenerateCornersPochmann(CubeManager cubeManager) {
         super(cubeManager, COMMAND_NAME);
     }
 
     @Override
+    /**
+     * Executes execute.
+     */
     public Result execute(String arguments) {
         CubeState cubeState = this.getCurrentCubeState();
         String translation;

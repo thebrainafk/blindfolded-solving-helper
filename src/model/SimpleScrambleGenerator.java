@@ -2,16 +2,25 @@ package model;
 
 import java.util.Random;
 
+/**
+ * Represents the SimpleScrambleGenerator class.
+ */
 public class SimpleScrambleGenerator {
     private static final String[] SCRAMBLE_FACES = {"U", "D", "L", "R", "F", "B"};
     private static final String[] SCRAMBLE_SUFFIXES = {"", "'", "2"};
 
     private final Random random;
 
+    /**
+     * Creates a new SimpleScrambleGenerator instance.
+     */
     public SimpleScrambleGenerator() {
         this.random = new Random();
     }
 
+    /**
+     * Executes generateLocalScramble.
+     */
     public String generateLocalScramble(int length) {
         StringBuilder builder = new StringBuilder();
         String lastFace = "";

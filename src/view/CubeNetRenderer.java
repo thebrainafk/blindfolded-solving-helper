@@ -3,6 +3,9 @@ package view;
 import model.CubeState;
 import model.cube.Tile;
 
+/**
+ * Represents the CubeNetRenderer class.
+ */
 public class CubeNetRenderer {
     private static final String COLOR_WHITE = "#FFFFFF";
     private static final String COLOR_YELLOW = "#FFFF00";
@@ -48,6 +51,9 @@ public class CubeNetRenderer {
             {Tile.X, Tile.w, Tile.W}
     };
 
+    /**
+     * Executes render.
+     */
     public String render(CubeState cubeState) {
         if (cubeState == null) {
             return "";
