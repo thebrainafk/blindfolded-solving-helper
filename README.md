@@ -1,6 +1,7 @@
-# Blindfolded Solution Generator
+# Blindfolded Solving Helper
+# https://blindfolded-backend.onrender.com
 
-Blindfolded Solution Generator is a small Java web app for blindfolded Rubik’s Cube practice.
+Blindfolded Solving Helper is a small Java web app for blindfolded Rubik’s Cube practice.
 It generates scrambles and computes solution-oriented output for blindfold methods (including M2 and Old Pochmann), so you can focus on memo and execution training.
 
 The project includes:
