@@ -35,9 +35,10 @@ public class GenerateEdgesM2 extends Command {
         try {
             TranslationGenerator translationGenerator = new TranslationGenerator(cubeState, cubeManager.isMemoryHelperEnabled(), Tile.u,
                     TileOrderComparatorFactory.fromResource("resources/edges_M2_tile_order.txt"));
-            List<Tile> M2TileSequence = this.cubeManager.generateEdgesM2TileSequence(cubeState, translationGenerator);
-            List<Tile> transformedTileSequence = this.applyOppositeTileRule(M2TileSequence);
+            List<Tile> M2TileSequence = this.cubeManager.generateSwappedTileSequenceWhenParity(cubeState, translationGenerator);
+            List<Tile> transformedTileSequence = applyOppositeTileRule(M2TileSequence);
             translation = translationGenerator.translateTilePairs(transformedTileSequence);
+
             SetupMoveGenerator setupMoveGenerator = new SetupMoveGenerator("resources/edges_M2_setup_moves.txt");
             setupMoves = setupMoveGenerator.generateFromTileSequence(transformedTileSequence);
         } catch (GameArgumentException error) {
@@ -47,7 +48,7 @@ public class GenerateEdgesM2 extends Command {
         return Result.edge(translation, setupMoves);
     }
 
-    private List<Tile> applyOppositeTileRule(List<Tile> tileSequence) {
+    private static List<Tile> applyOppositeTileRule(List<Tile> tileSequence) {
         List<Tile> transformedTileSequence = new ArrayList<>(tileSequence);
         for (int i = 1; i < transformedTileSequence.size(); i = i + 2) {
             Tile opposite = transformedTileSequence.get(i).getOppositeTile();

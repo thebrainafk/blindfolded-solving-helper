@@ -34,8 +34,9 @@ public class GenerateEdgesPochmann extends Command {
         try {
             TranslationGenerator translationGenerator = new TranslationGenerator(cubeState, cubeManager.isMemoryHelperEnabled(), Tile.b,
                     TileOrderComparatorFactory.fromResource("resources/edges_pochmann_tile_order.txt"));
-            List<Tile> tileSequence = translationGenerator.generateTileSequence();
+            List<Tile> tileSequence = this.cubeManager.generateSwappedTileSequenceWhenParity(cubeState, translationGenerator);
             translation = translationGenerator.translateTilePairs(tileSequence);
+
             SetupMoveGenerator setupMoveGenerator = new SetupMoveGenerator("resources/edges_pochmann_setup_moves.txt");
             setupMoves = setupMoveGenerator.generateFromTileSequence(tileSequence);
         } catch (GameArgumentException error) {

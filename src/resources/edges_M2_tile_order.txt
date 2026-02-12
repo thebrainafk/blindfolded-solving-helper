@@ -1,8 +1,6 @@
 # Order for new edge buffers in the generateEdgesM2 command.
 # One tile per row. Tiles not listed are added alphabetically afterward.
 a
-w
-c
 j
 l
 r
@@ -11,3 +9,5 @@ v
 x
 b
 d
+w
+c

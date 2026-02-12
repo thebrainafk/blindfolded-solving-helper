@@ -43,11 +43,17 @@ public class CubeManager {
     /**
      * Executes generateEdgesM2TileSequence.
      */
-    public List<Tile> generateEdgesM2TileSequence(CubeState cubeState, TranslationGenerator translationGenerator) throws GameArgumentException {
+    public List<Tile> generateSwappedTileSequenceWhenParity(CubeState cubeState, TranslationGenerator translationGenerator) throws GameArgumentException {
         TranslationGenerator cornerTranslator = new TranslationGenerator(cubeState, memoryHelper, Tile.E,
                 TileOrderComparatorFactory.fromResource("resources/corners_pochmann_tile_order.txt"));
         List<Tile> CornerTileSequence = cornerTranslator.generateTileSequence();
 
+        swapWhenParity(cubeState, CornerTileSequence);
+
+        return translationGenerator.generateTileSequence();
+    }
+
+    private static void swapWhenParity(CubeState cubeState, List<Tile> CornerTileSequence) {
         if (CornerTileSequence.size() % 2 == 1) {
             Map<EdgePiece, Edge> edges = cubeState.getEdges();
             for (Edge edge : edges.values()) {
@@ -61,8 +67,6 @@ public class CubeManager {
                 }
             }
         }
-
-        return translationGenerator.generateTileSequence();
     }
 
     /**
@@ -70,7 +74,7 @@ public class CubeManager {
      */
     public String generateScramble() throws GameArgumentException {
         SimpleScrambleGenerator simpleScrambleGenerator = new SimpleScrambleGenerator();
-        return simpleScrambleGenerator.generateLocalScramble(15);
+        return simpleScrambleGenerator.generateLocalScramble(20);
     }
 
     /**
