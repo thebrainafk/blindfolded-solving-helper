@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Manages the Cube by executing commands.
+ * Central facade for cube state mutations and algorithm-related helper operations.
  */
 public class CubeManager {
     private Cube cube;
     private boolean memoryHelper;
 
     /**
-     * Creates a new CubeManager instance.
+     * Creates a cube manager with a solved cube and disabled memory helper.
      */
     public CubeManager() {
         this.cube = new Cube();
@@ -27,21 +27,28 @@ public class CubeManager {
     }
 
     /**
-     * Executes resetCube.
+     * Resets the managed cube to the solved state.
      */
     public void resetCube() {
         this.cube = new Cube();
     }
 
     /**
-     * Executes getCube.
+     * Returns the currently managed cube instance.
+     *
+     * @return mutable cube model
      */
     public Cube getCube() {
         return this.cube;
     }
 
     /**
-     * Executes generateEdgesM2TileSequence.
+     * Generates the translated edge tile sequence and applies parity handling when required.
+     *
+     * @param cubeState snapshot used for translation
+     * @param translationGenerator configured edge translation generator
+     * @return translated edge tile sequence
+     * @throws GameArgumentException if resources for translation cannot be loaded
      */
     public List<Tile> generateSwappedTileSequenceWhenParity(CubeState cubeState, TranslationGenerator translationGenerator) throws GameArgumentException {
         TranslationGenerator cornerTranslator = new TranslationGenerator(cubeState, memoryHelper, Tile.E,
@@ -70,7 +77,10 @@ public class CubeManager {
     }
 
     /**
-     * Executes generateScramble.
+     * Generates a random scramble with 20 moves.
+     *
+     * @return scramble string
+     * @throws GameArgumentException if scramble generation fails
      */
     public String generateScramble() throws GameArgumentException {
         SimpleScrambleGenerator simpleScrambleGenerator = new SimpleScrambleGenerator();
@@ -78,7 +88,10 @@ public class CubeManager {
     }
 
     /**
-     * Executes scrambleCube.
+     * Applies all parsed moves to the managed cube.
+     *
+     * @param allMoves parsed move sequence in internal representation
+     * @throws GameArgumentException if a move cannot be applied
      */
     public void scrambleCube(List<MovesParser.AllMoves> allMoves) throws GameArgumentException {
         for (MovesParser.AllMoves move : allMoves) {
@@ -89,14 +102,16 @@ public class CubeManager {
     }
 
     /**
-     * Executes toggleMemoryHelper.
+     * Toggles the memory-helper mode used by translation output.
      */
     public void toggleMemoryHelper() {
         this.memoryHelper = !this.memoryHelper;
     }
 
     /**
-     * Executes isMemoryHelperEnabled.
+     * Indicates whether memory-helper output is currently enabled.
+     *
+     * @return {@code true} if helper mode is active
      */
     public boolean isMemoryHelperEnabled() {
         return this.memoryHelper;

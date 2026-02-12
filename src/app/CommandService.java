@@ -12,14 +12,19 @@ public class CommandService {
     private final CommandRegistry registry;
 
     /**
-     * Creates a new CommandService instance.
+     * Creates a new command service.
+     *
+     * @param registry command registry used for lookups
      */
     public CommandService(CommandRegistry registry) {
         this.registry = Objects.requireNonNull(registry);
     }
 
     /**
-     * Executes execute.
+     * Validates and executes a command request.
+     *
+     * @param request request containing command name and optional argument
+     * @return command result with output data or an error message
      */
     public Result execute(CommandRequest request) {
         if (request == null || request.name() == null || request.name().isBlank()) {

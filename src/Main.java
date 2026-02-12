@@ -11,7 +11,9 @@ public final class Main {
     }
 
     /**
-     * Executes main.
+     * Starts the web application, prints the startup URL and performs an initial scramble generation.
+     *
+     * @param args command-line arguments (currently unused)
      */
     public static void main(String[] args) {
         CubeManager cubeManager = new CubeManager();
@@ -34,6 +36,11 @@ public final class Main {
         }
     }
 
+    /**
+     * Resolves the HTTP port from the {@code PORT} environment variable.
+     *
+     * @return parsed port number or {@code 8080} if no valid value is configured
+     */
     private static int resolvePort() {
         String rawPort = System.getenv("PORT");
         if (rawPort == null || rawPort.isBlank()) {

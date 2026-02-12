@@ -34,7 +34,10 @@ public class WebServer {
     private final Set<String> corsAllowedOrigins;
 
     /**
-     * Creates a new WebServer instance.
+     * Creates a new web server with command and cube state access.
+     *
+     * @param commandService command execution service
+     * @param cubeManager shared cube manager that stores the current cube state
      */
     public WebServer(CommandService commandService, CubeManager cubeManager) {
         this.commandService = commandService;
@@ -44,7 +47,10 @@ public class WebServer {
     }
 
     /**
-     * Executes start.
+     * Starts the HTTP server and registers all web and API endpoints.
+     *
+     * @param port TCP port to bind
+     * @throws IOException if the server socket cannot be opened
      */
     public void start(int port) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);

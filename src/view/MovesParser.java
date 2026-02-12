@@ -6,11 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents the MovesParser class.
+ * Parser utilities for converting scramble strings into internal move enums.
  */
 public class MovesParser {
     /**
-     * Represents the Moves enum.
+     * Base face moves without direction information.
      */
     public enum Moves {
         R,
@@ -21,7 +21,10 @@ public class MovesParser {
         B;
 
         /**
-         * Executes getMovesFromChar.
+         * Resolves a move face from its single-character notation.
+         *
+         * @param moveChar face character such as {@code R} or {@code u}
+         * @return matching move or {@code null} for unknown characters
          */
         public static Moves getMovesFromChar(char moveChar) {
             for (Moves move : Moves.values()) {
@@ -34,7 +37,7 @@ public class MovesParser {
     }
 
     /**
-     * Represents the MoveDirections enum.
+     * Supported direction suffixes used in scramble notation.
      */
     public enum MoveDirections {
         CLOCKWISE("", 1),
@@ -51,7 +54,10 @@ public class MovesParser {
 
 
         /**
-         * Executes getDirection.
+         * Resolves the direction enum from a suffix token.
+         *
+         * @param direction suffix token ({@code ""}, {@code "2"}, {@code "'"})
+         * @return matching direction or {@code null} if unsupported
          */
         public static MoveDirections getDirection(String direction) {
             for (MoveDirections directions : MoveDirections.values()) {
@@ -64,7 +70,7 @@ public class MovesParser {
     }
 
     /**
-     * Represents the AllMoves enum.
+     * Combined move representation containing face and direction.
      */
     public enum AllMoves {
         R_CW(Moves.R, MoveDirections.CLOCKWISE), L_CW(Moves.L, MoveDirections.CLOCKWISE), U_CW(Moves.U, MoveDirections.CLOCKWISE),
@@ -83,7 +89,11 @@ public class MovesParser {
         }
 
         /**
-         * Executes getAllMovesFromMoveAndDirection.
+         * Resolves a combined move from face and direction.
+         *
+         * @param move move face
+         * @param direction move direction
+         * @return matching combined move or {@code null} if no combination exists
          */
         public static AllMoves getAllMovesFromMoveAndDirection(Moves move, MoveDirections direction) {
             for (AllMoves allMoves : AllMoves.values()) {
@@ -95,14 +105,18 @@ public class MovesParser {
         }
 
         /**
-         * Executes getTurns.
+         * Returns the number of quarter turns represented by this move.
+         *
+         * @return quarter-turn count
          */
         public int getTurns() {
             return this.direction.turns;
         }
 
         /**
-         * Executes getMove.
+         * Returns the face component of this move.
+         *
+         * @return move face
          */
         public Moves getMove() {
             return this.move;
@@ -121,7 +135,10 @@ public class MovesParser {
     }
 
     /**
-     * Executes getMovesFromScramble.
+     * Parses a scramble string into a list of internal move objects.
+     *
+     * @param scramble scramble text in standard notation
+     * @return parsed move list in execution order
      */
     public static List<AllMoves> getMovesFromScramble(String scramble) {
         List<AllMoves> allMoves = new ArrayList<>();

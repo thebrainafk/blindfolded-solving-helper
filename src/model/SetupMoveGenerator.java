@@ -14,21 +14,28 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents the SetupMoveGenerator class.
+ * Resolves setup-move strings for translated tile sequences.
  */
 public class SetupMoveGenerator {
 
     private final Map<Tile, String> setupMoves;
 
     /**
-     * Creates a new SetupMoveGenerator instance.
+     * Loads setup-move definitions from a resource file.
+     *
+     * @param resourcePath classpath or filesystem path to the setup-move table
+     * @throws GameArgumentException if the table cannot be loaded or parsed
      */
     public SetupMoveGenerator(String resourcePath) throws GameArgumentException {
         this.setupMoves = this.loadSetupMoves(resourcePath);
     }
 
     /**
-     * Executes generateFromTileSequence.
+     * Converts a tile sequence into a printable list of setup-move lines.
+     *
+     * @param tileSequence translated tile sequence
+     * @return multi-line setup-move output
+     * @throws GameArgumentException if a tile pair has no setup-move definition
      */
     public String generateFromTileSequence(List<Tile> tileSequence) {
         StringBuilder setupMovesBuilder = new StringBuilder();

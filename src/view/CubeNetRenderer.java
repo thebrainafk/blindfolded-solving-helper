@@ -4,7 +4,7 @@ import model.CubeState;
 import model.cube.Tile;
 
 /**
- * Represents the CubeNetRenderer class.
+ * Renders the current cube state as an HTML cube net for the web UI.
  */
 public class CubeNetRenderer {
     private static final String COLOR_WHITE = "#FFFFFF";
@@ -52,7 +52,10 @@ public class CubeNetRenderer {
     };
 
     /**
-     * Executes render.
+     * Produces HTML for a complete cube-net view from the given cube state.
+     *
+     * @param cubeState cube state snapshot to render
+     * @return HTML fragment representing the cube net
      */
     public String render(CubeState cubeState) {
         if (cubeState == null) {

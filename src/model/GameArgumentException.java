@@ -1,12 +1,14 @@
 package model;
 
 /**
- * This exception is used to symbolize a semantic error within the games' execution.
+ * Signals domain-specific validation or parsing errors during cube operations.
  */
 public class GameArgumentException extends Exception {
 
     /**
-     * Creates a new GameArgumentException instance.
+     * Creates a new checked exception with a human-readable message.
+     *
+     * @param message error description
      */
     public GameArgumentException(String message) {
         super(message);
