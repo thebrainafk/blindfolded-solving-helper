@@ -32,6 +32,9 @@ public class ScrambleCube extends Command {
         }
 
         List<MovesParser.AllMoves> allMoves = MovesParser.getMovesFromScramble(arguments);
+        if (allMoves.isEmpty()) {
+            return Result.error("no moves found in scramble");
+        }
 
         try {
             this.cubeManager.scrambleCube(allMoves);
