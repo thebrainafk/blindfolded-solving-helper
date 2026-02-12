@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Represents the TranslationGenerator class.
+ * Generates ordered tile-pair translations from the current cube state.
  */
 public class TranslationGenerator {
 
@@ -77,7 +77,11 @@ public class TranslationGenerator {
     }
 
     /**
-     * Executes translateTilePairs.
+     * Translates tile pairs to text output, optionally using memory helper words.
+     *
+     * @param tileSequence ordered tile sequence
+     * @return formatted output lines for the UI
+     * @throws GameArgumentException if memory word lookup fails
      */
     public String translateTilePairs(List<Tile> tileSequence) {
         for (int i = 0; i < tileSequence.size(); i = i + 2) {
@@ -107,7 +111,10 @@ public class TranslationGenerator {
     }
 
     /**
-     * Executes generateTileSequence.
+     * Computes the next target tile sequence for the configured buffer and order.
+     *
+     * @return ordered tile sequence
+     * @throws GameArgumentException if cube data cannot be processed
      */
     public List<Tile> generateTileSequence() {
         List<Tile> tileSequence = new ArrayList<>();

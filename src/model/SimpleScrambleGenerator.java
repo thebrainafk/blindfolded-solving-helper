@@ -3,7 +3,7 @@ package model;
 import java.util.Random;
 
 /**
- * Represents the SimpleScrambleGenerator class.
+ * Generates random scrambles using standard cube face notation.
  */
 public class SimpleScrambleGenerator {
     private static final String[] SCRAMBLE_FACES = {"U", "D", "L", "R", "F", "B"};
@@ -12,14 +12,19 @@ public class SimpleScrambleGenerator {
     private final Random random;
 
     /**
-     * Creates a new SimpleScrambleGenerator instance.
+     * Creates a scramble generator backed by {@link java.util.Random}.
      */
     public SimpleScrambleGenerator() {
         this.random = new Random();
     }
 
     /**
-     * Executes generateLocalScramble.
+     * Generates a scramble string with the requested number of moves.
+     *
+     * <p>Two consecutive moves never use the same face to keep scrambles practical.
+     *
+     * @param length number of moves to generate
+     * @return space-separated scramble string
      */
     public String generateLocalScramble(int length) {
         StringBuilder builder = new StringBuilder();

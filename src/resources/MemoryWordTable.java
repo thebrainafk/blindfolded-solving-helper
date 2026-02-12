@@ -8,13 +8,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * Represents the MemoryWordTable class.
+ * Two-dimensional lookup table for mnemonic words indexed by letter pairs.
  */
 public class MemoryWordTable {
     private final String[][] words;
 
     /**
-     * Creates a new MemoryWordTable instance.
+     * Loads memory words from an input stream.
+     *
+     * @param input source that contains pair-to-word mappings
+     * @throws GameArgumentException if reading fails
      */
     public MemoryWordTable(InputStream input) throws GameArgumentException {
         this.words = new String[24][24];
@@ -22,14 +25,22 @@ public class MemoryWordTable {
     }
 
     /**
-     * Executes setWord.
+     * Stores a memory word at the given pair coordinates.
+     *
+     * @param row first-letter index
+     * @param column second-letter index
+     * @param word mnemonic word
      */
     public void setWord(int row, int column, String word) {
         words[row][column] = word;
     }
 
     /**
-     * Executes getWord.
+     * Returns the memory word stored for the given coordinates.
+     *
+     * @param row first-letter index
+     * @param column second-letter index
+     * @return mnemonic word or {@code null} if undefined
      */
     public String getWord(int row, int column) {
         return words[row][column];

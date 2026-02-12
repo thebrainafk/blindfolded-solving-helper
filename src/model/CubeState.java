@@ -10,14 +10,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents the CubeState class.
+ * Immutable snapshot-like copy of corners and edges for read-only calculations.
  */
 public class CubeState {
     private final Map<CornerPiece, Corner> corners;
     private final Map<EdgePiece, Edge> edges;
 
     /**
-     * Creates a new CubeState instance.
+     * Creates a detached copy of the provided cube state.
+     *
+     * @param cube cube to copy from
      */
     public CubeState(Cube cube) {
         this.corners = new HashMap<>();
@@ -33,14 +35,18 @@ public class CubeState {
     }
 
     /**
-     * Executes getCorners.
+     * Returns copied corner pieces indexed by their solved position.
+     *
+     * @return map of corners
      */
     public Map<CornerPiece, Corner> getCorners() {
         return this.corners;
     }
 
     /**
-     * Executes getEdges.
+     * Returns copied edge pieces indexed by their solved position.
+     *
+     * @return map of edges
      */
     public Map<EdgePiece, Edge> getEdges() {
         return this.edges;

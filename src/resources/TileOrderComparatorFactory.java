@@ -15,7 +15,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Represents the TileOrderComparatorFactory class.
+ * Creates tile comparators from externally configured tile orders.
  */
 public final class TileOrderComparatorFactory {
 
@@ -23,7 +23,11 @@ public final class TileOrderComparatorFactory {
     }
 
     /**
-     * Executes fromResource.
+     * Builds a comparator that sorts tiles by the order listed in a resource file.
+     *
+     * @param resourcePath path to the tile-order definition
+     * @return comparator that applies configured priority first
+     * @throws GameArgumentException if the resource is missing or invalid
      */
     public static Comparator<Tile> fromResource(String resourcePath) throws GameArgumentException {
         Map<Tile, Integer> priorityMap = new EnumMap<>(Tile.class);

@@ -3,7 +3,7 @@ package view;
 import java.util.Objects;
 
 /**
- * Represents the Result class.
+ * Immutable command result object used by service and web layers.
  */
 public final class Result {
 
@@ -34,84 +34,114 @@ public final class Result {
     }
 
     /**
-     * Executes none.
+     * Creates a successful empty result used as default placeholder.
+     *
+     * @return successful empty result
      */
     public static Result none() {
         return new Result(true, "", "", "", "", "", "");
     }
 
     /**
-     * Executes scramble.
+     * Creates a result containing only a generated scramble.
+     *
+     * @param scramble generated scramble string
+     * @return successful scramble result
      */
     public static Result scramble(String scramble) {
         return new Result(true, "", scramble, "", "", "", "");
     }
 
     /**
-     * Executes edge.
+     * Creates a result containing edge translation and setup moves.
+     *
+     * @param edgeAlgorithmOutput edge pair output
+     * @param edgeSetupMovesOutput edge setup-move output
+     * @return successful edge result
      */
     public static Result edge(String edgeAlgorithmOutput, String edgeSetupMovesOutput) {
         return new Result(true, "", "", edgeAlgorithmOutput, "", edgeSetupMovesOutput, "");
     }
 
     /**
-     * Executes corner.
+     * Creates a result containing corner translation and setup moves.
+     *
+     * @param cornerAlgorithmOutput corner pair output
+     * @param cornerSetupMovesOutput corner setup-move output
+     * @return successful corner result
      */
     public static Result corner(String cornerAlgorithmOutput, String cornerSetupMovesOutput) {
         return new Result(true, "", "", "", cornerAlgorithmOutput, "", cornerSetupMovesOutput);
     }
 
     /**
-     * Executes error.
+     * Creates a failed result with an error message.
+     *
+     * @param message human-readable error
+     * @return failed result
      */
     public static Result error(String message) {
         return new Result(false, message, "", "", "", "", "");
     }
 
     /**
-     * Executes success.
+     * Indicates whether command execution succeeded.
+     *
+     * @return {@code true} if successful
      */
     public boolean success() {
         return success;
     }
 
     /**
-     * Executes errorMessage.
+     * Returns the error message for failed executions.
+     *
+     * @return error message or empty string
      */
     public String errorMessage() {
         return errorMessage;
     }
 
     /**
-     * Executes scramble.
+     * Returns the currently stored scramble text.
+     *
+     * @return scramble string or empty string
      */
     public String scramble() {
         return scramble;
     }
 
     /**
-     * Executes edgeAlgorithmOutput.
+     * Returns rendered edge pair output text.
+     *
+     * @return edge output text
      */
     public String edgeAlgorithmOutput() {
         return edgeAlgorithmOutput;
     }
 
     /**
-     * Executes cornerAlgorithmOutput.
+     * Returns rendered corner pair output text.
+     *
+     * @return corner output text
      */
     public String cornerAlgorithmOutput() {
         return cornerAlgorithmOutput;
     }
 
     /**
-     * Executes edgeSetupMovesOutput.
+     * Returns rendered edge setup-move text.
+     *
+     * @return edge setup-move output
      */
     public String edgeSetupMovesOutput() {
         return edgeSetupMovesOutput;
     }
 
     /**
-     * Executes cornerSetupMovesOutput.
+     * Returns rendered corner setup-move text.
+     *
+     * @return corner setup-move output
      */
     public String cornerSetupMovesOutput() {
         return cornerSetupMovesOutput;
