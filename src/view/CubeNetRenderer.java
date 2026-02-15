@@ -7,12 +7,6 @@ import model.cube.Tile;
  * Renders the current cube state as an HTML cube net for the web UI.
  */
 public class CubeNetRenderer {
-    private static final String COLOR_WHITE = "#FFFFFF";
-    private static final String COLOR_YELLOW = "#FFFF00";
-    private static final String COLOR_BLUE = "#3A5FCD";
-    private static final String COLOR_GREEN = "#008000";
-    private static final String COLOR_RED = "#FF0000";
-    private static final String COLOR_ORANGE = "#FFA500";
     private static final String COLOR_UNKNOWN = "#999999";
 
     private static final Tile[][] FACE_UP = {
@@ -62,12 +56,12 @@ public class CubeNetRenderer {
             return "";
         }
         return "<div class=\"cube-net\">" +
-                renderFace("face-up", FACE_UP, COLOR_WHITE, cubeState) +
-                renderFace("face-left", FACE_LEFT, COLOR_ORANGE, cubeState) +
-                renderFace("face-front", FACE_FRONT, COLOR_GREEN, cubeState) +
-                renderFace("face-right", FACE_RIGHT, COLOR_RED, cubeState) +
-                renderFace("face-back", FACE_BACK, COLOR_BLUE, cubeState) +
-                renderFace("face-down", FACE_DOWN, COLOR_YELLOW, cubeState) +
+                renderFace("face-up", FACE_UP, Tile.Constants.WHITE, cubeState) +
+                renderFace("face-left", FACE_LEFT, Tile.Constants.ORANGE, cubeState) +
+                renderFace("face-front", FACE_FRONT, Tile.Constants.GREEN, cubeState) +
+                renderFace("face-right", FACE_RIGHT, Tile.Constants.RED, cubeState) +
+                renderFace("face-back", FACE_BACK, Tile.Constants.BLUE, cubeState) +
+                renderFace("face-down", FACE_DOWN, Tile.Constants.YELLOW, cubeState) +
                 "</div>";
     }
 

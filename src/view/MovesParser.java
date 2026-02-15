@@ -1,5 +1,7 @@
 package view;
 
+import model.GameArgumentException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -91,7 +93,7 @@ public class MovesParser {
         /**
          * Resolves a combined move from face and direction.
          *
-         * @param move move face
+         * @param move      move face
          * @param direction move direction
          * @return matching combined move or {@code null} if no combination exists
          */
@@ -123,13 +125,16 @@ public class MovesParser {
         }
     }
 
-    private static List<String> parseScramble(String input) {
+    private static List<String> parseScramble(String input) throws GameArgumentException {
         input = input.replaceAll("\\s+", "");
         Pattern movePattern = Pattern.compile("[RLFBUD][2']?");
         Matcher matcher = movePattern.matcher(input);
         List<String> moves = new ArrayList<>();
         while (matcher.find()) {
             moves.add(matcher.group());
+        }
+        if (moves.isEmpty()) {
+            throw new GameArgumentException("no valid moves found in scramble");
         }
         return moves;
     }
@@ -140,7 +145,7 @@ public class MovesParser {
      * @param scramble scramble text in standard notation
      * @return parsed move list in execution order
      */
-    public static List<AllMoves> getMovesFromScramble(String scramble) {
+    public static List<AllMoves> getMovesFromScramble(String scramble) throws GameArgumentException {
         List<AllMoves> allMoves = new ArrayList<>();
         for (String wholeMove : parseScramble(scramble)) {
             Moves move = Moves.getMovesFromChar(wholeMove.charAt(0));

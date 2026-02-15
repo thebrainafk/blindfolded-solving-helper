@@ -9,58 +9,57 @@ import java.util.Map;
  * Represents the Tile enum.
  */
 public enum Tile {
-    A(Constants.WHITE, 0, 0),
-    B(Constants.WHITE, 1, 1),
-    C(Constants.WHITE, 2, 2),
-    D(Constants.WHITE, 3, 3),
-    E(Constants.ORANGE, 4, 4),
-    F(Constants.ORANGE, 5, 5),
-    G(Constants.ORANGE, 6, 6),
-    H(Constants.ORANGE, 7, 7),
-    I(Constants.GREEN, 8, 8),
-    J(Constants.GREEN, 9, 9),
-    K(Constants.GREEN, 10, 10),
-    L(Constants.GREEN, 11, 11),
-    M(Constants.RED, 12, 12),
-    N(Constants.RED, 13, 13),
-    O(Constants.RED, 14, 14),
-    P(Constants.RED, 15, 15),
-    Q(Constants.BLUE, 16, 16),
-    R(Constants.BLUE, 17, 17),
-    S(Constants.BLUE, 18, 18),
-    T(Constants.BLUE, 19, 19),
-    U(Constants.YELLOW, 20, 20),
-    V(Constants.YELLOW, 21, 21),
-    W(Constants.YELLOW, 22, 22),
-    X(Constants.YELLOW, 23, 23),
-    a(Constants.WHITE, 0, 0),
-    b(Constants.WHITE, 1, 1),
-    c(Constants.WHITE, 2, 2),
-    d(Constants.WHITE, 3, 3),
-    e(Constants.ORANGE, 4, 4),
-    f(Constants.ORANGE, 5, 5),
-    g(Constants.ORANGE, 6, 6),
-    h(Constants.ORANGE, 7, 7),
-    i(Constants.GREEN, 8, 8),
-    j(Constants.GREEN, 9, 9),
-    k(Constants.GREEN, 10, 10),
-    l(Constants.GREEN, 11, 11),
-    m(Constants.RED, 12, 12),
-    n(Constants.RED, 13, 13),
-    o(Constants.RED, 14, 14),
-    p(Constants.RED, 15, 15),
-    q(Constants.BLUE, 16, 16),
-    r(Constants.BLUE, 17, 17),
-    s(Constants.BLUE, 18, 18),
-    t(Constants.BLUE, 19, 19),
-    u(Constants.YELLOW, 20, 20),
-    v(Constants.YELLOW, 21, 21),
-    w(Constants.YELLOW, 22, 22),
-    x(Constants.YELLOW, 23, 23);
+    A(Constants.WHITE, 0),
+    B(Constants.WHITE, 1),
+    C(Constants.WHITE, 2),
+    D(Constants.WHITE, 3),
+    E(Constants.ORANGE, 4),
+    F(Constants.ORANGE, 5),
+    G(Constants.ORANGE, 6),
+    H(Constants.ORANGE, 7),
+    I(Constants.GREEN, 8),
+    J(Constants.GREEN, 9),
+    K(Constants.GREEN, 10),
+    L(Constants.GREEN, 11),
+    M(Constants.RED, 12),
+    N(Constants.RED, 13),
+    O(Constants.RED, 14),
+    P(Constants.RED, 15),
+    Q(Constants.BLUE, 16),
+    R(Constants.BLUE, 17),
+    S(Constants.BLUE, 18),
+    T(Constants.BLUE, 19),
+    U(Constants.YELLOW, 20),
+    V(Constants.YELLOW, 21),
+    W(Constants.YELLOW, 22),
+    X(Constants.YELLOW, 23),
+    a(Constants.WHITE, 0),
+    b(Constants.WHITE, 1),
+    c(Constants.WHITE, 2),
+    d(Constants.WHITE, 3),
+    e(Constants.ORANGE, 4),
+    f(Constants.ORANGE, 5),
+    g(Constants.ORANGE, 6),
+    h(Constants.ORANGE, 7),
+    i(Constants.GREEN, 8),
+    j(Constants.GREEN, 9),
+    k(Constants.GREEN, 10),
+    l(Constants.GREEN, 11),
+    m(Constants.RED, 12),
+    n(Constants.RED, 13),
+    o(Constants.RED, 14),
+    p(Constants.RED, 15),
+    q(Constants.BLUE, 16),
+    r(Constants.BLUE, 17),
+    s(Constants.BLUE, 18),
+    t(Constants.BLUE, 19),
+    u(Constants.YELLOW, 20),
+    v(Constants.YELLOW, 21),
+    w(Constants.YELLOW, 22),
+    x(Constants.YELLOW, 23);
 
     private final String color;
-    private final int row;
-    private final int column;
+    private final int coordinate;
 
     private static final Map<Tile, Tile> left = new HashMap<>();
     private static final Map<Tile, Tile> right = new HashMap<>();
@@ -70,17 +69,16 @@ public enum Tile {
     private static final Map<Tile, Tile> back = new HashMap<>();
 
 
-    Tile(String color, int row, int column) {
+    Tile(String color, int coordinate) {
         this.color = color;
-        this.row = row;
-        this.column = column;
+        this.coordinate = coordinate;
     }
 
     /**
      * Executes getCoordinates.
      */
     public int[] getCoordinates(Tile tile) {
-        return new int[]{this.row, tile.column};
+        return new int[]{this.coordinate, tile.coordinate};
     }
 
     static {
@@ -317,12 +315,12 @@ public enum Tile {
         }
     }
 
-    private static class Constants {
-        private static final String WHITE = "#FFFFFF";
-        private static final String YELLOW = "#FFFF00";
-        private static final String BLUE = "#3A5FCD";
-        private static final String GREEN = "#008000";
-        private static final String RED = "#FF0000";
-        private static final String ORANGE = "#FFA500";
+    public static class Constants {
+        public static final String WHITE = "#FFFFFF";
+        public static final String YELLOW = "#FFFF00";
+        public static final String BLUE = "#3A5FCD";
+        public static final String GREEN = "#008000";
+        public static final String RED = "#FF0000";
+        public static final String ORANGE = "#FFA500";
     }
 }
